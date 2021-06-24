@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-  useHistory,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
@@ -14,9 +8,11 @@ import Header from "./Components/Header";
 import Home from "./Pages/Home";
 import SignIn from "./Pages/SignIn";
 import EmailVerifactionPage from "./Pages/EmailVerifactionPage";
+import { getArtistProfile } from "./action/auth";
 
 // Firebase
 import firebase from "firebase/app";
+
 import { useDispatch, connect } from "react-redux";
 import {
   SET_ARTIST_EMAIL,
@@ -25,8 +21,9 @@ import {
   SET_ISAUTHENTICATED,
   SET_IS_EMAIL_VERIFIED,
 } from "./action/action.type";
+import EditArtistProfile from "./Pages/EditArtistProfile";
 
-const App = ({ auth }) => {
+const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
 
   const onAuthStateChanged = async (user) => {
@@ -47,16 +44,7 @@ const App = ({ auth }) => {
         dispatch({ type: SET_ARTIST_UID, payload: user.uid });
       }
 
-      await firebase
-        .firestore()
-        .collection("artist")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.data()) {
-            dispatch({ type: SET_ARTIST_PROFILE, payload: doc.data() });
-          }
-        });
+      getArtistProfile({ uid: user.uid });
     }
   };
 
@@ -75,6 +63,9 @@ const App = ({ auth }) => {
         <Route exact path="/">
           <Home />
         </Route>
+        <Route exact path="/editartistprofile">
+          <EditArtistProfile />
+        </Route>
         <Route exact path="/signin">
           <SignIn />
         </Route>
@@ -90,4 +81,8 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = {
+  getArtistProfile: (data) => getArtistProfile(data),
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -8,14 +8,17 @@ import {
   SET_ARTIST_SOCIAL_PROVIDER_NAME,
   SET_ARTIST_SOCIAL_ID,
   ADD_ARTIST_SOCIAL,
+  CLEAR_UPDATE_ARTIST_PROFILE_STATE,
+  SET_ARTIST_PROFILE_UPDATE_DATA,
+  DELETE_ARTIST_SOCIAL,
 } from "../action/action.type";
 
 const initialState = {
   bio: "",
-  dateOfBirth: null,
-  dateStarted: null,
+  dateOfBirth: "",
+  dateStarted: "",
   name: "",
-  profilePicUrl: null,
+  profilePicUrl: "",
   social: [],
   socialID: "",
   socialLink: "",
@@ -24,6 +27,35 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case ADD_ARTIST_SOCIAL:
+      const newArr = state.social;
+
+      newArr.push({
+        socialID: state.socialID,
+        socialLink: state.socialLink,
+        socialProviderName: state.socialProviderName,
+      });
+      return {
+        ...state,
+        social: newArr,
+        socialID: "",
+        socialLink: "",
+        socialProviderName: "",
+      };
+    case DELETE_ARTIST_SOCIAL:
+      const deleteArr = state.social;
+      deleteArr.splice(action.payload, 1);
+
+      return {
+        ...state,
+        social: deleteArr,
+      };
+    case CLEAR_UPDATE_ARTIST_PROFILE_STATE:
+      return initialState;
+
+    case SET_ARTIST_PROFILE_UPDATE_DATA:
+      return { ...state, ...action.payload };
+
     case SET_ARTIST_BIO:
       return {
         ...state,
@@ -51,13 +83,6 @@ export default (state = initialState, action) => {
         profilePicUrl: action.payload,
       };
 
-    case ADD_ARTIST_SOCIAL:
-      const newArr = state.social;
-      newArr.push(action.payload);
-      return {
-        ...state,
-        social: newArr,
-      };
     case SET_ARTIST_SOCIAL_ID:
       return {
         ...state,
