@@ -15,7 +15,7 @@ const initialState = {
   dateOfBirth: null,
   dateStarted: null,
   name: "",
-  profilePic_Url: null,
+  profilePicUrl: null,
   social: [],
   socialID: "",
   socialLink: "",
@@ -48,7 +48,7 @@ export default (state = initialState, action) => {
     case SET_ARTIST_PROFILE_PIC_URL:
       return {
         ...state,
-        profilePic_Url: action.payload,
+        profilePicUrl: action.payload,
       };
 
     case ADD_ARTIST_SOCIAL:

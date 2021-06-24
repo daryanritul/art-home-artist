@@ -1,9 +1,9 @@
 // Auth Action
-
+export const SET_ARTIST_PROFILE = "SET_ARTIST_PROFILE";
+export const SET_ARTIST_EMAIL = "SET_ARTIST_EMAIL";
+export const SET_ARTIST_UID = "SET_ARTIST_UID";
 export const SET_ISAUTHENTICATED = "SET_ISAUTHENTICATED";
 export const SET_IS_EMAIL_VERIFIED = "SET_IS_EMAIL_VERIFIED";
-export const SET_ARTIST_UID = "SET_ARTIST_UID";
-export const SET_ARTIST_PROFILE = "SET_ARTIST_PROFILE";
 
 // Uplaod Art Action
 export const SET_ART_CATEGORY = "SET_ART_CATEGORY";
