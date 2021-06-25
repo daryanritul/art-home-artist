@@ -12,7 +12,7 @@ const ArtistProfile = ({ profile }) => {
   const history = useHistory();
 
   return (
-    <div>
+    <div className="container border border-3 border-rounder-4 mt-2 p-3">
       <table className="table">
         <tbody>
           <tr>

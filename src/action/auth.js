@@ -48,7 +48,7 @@ export const updateArtistProfileFun =
         dispatch({
           type: CLEAR_UPDATE_ARTIST_PROFILE_STATE,
         });
-        history.push("/");
+        history.push("/artistprofile");
       })
       .catch((error) => {
         console.log(error);

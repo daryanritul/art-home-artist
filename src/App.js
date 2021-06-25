@@ -8,6 +8,10 @@ import Header from "./Components/Header";
 import Home from "./Pages/Home";
 import SignIn from "./Pages/SignIn";
 import EmailVerifactionPage from "./Pages/EmailVerifactionPage";
+import EditArtistProfile from "./Pages/EditArtistProfile";
+import ArtistProfile from "./Pages/ArtistProfile";
+import AddArt from "./Pages/AddArt";
+
 import { getArtistProfile } from "./action/auth";
 
 // Firebase
@@ -21,7 +25,6 @@ import {
   SET_ISAUTHENTICATED,
   SET_IS_EMAIL_VERIFIED,
 } from "./action/action.type";
-import EditArtistProfile from "./Pages/EditArtistProfile";
 
 const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
@@ -63,8 +66,14 @@ const App = ({ auth, getArtistProfile }) => {
         <Route exact path="/">
           <Home />
         </Route>
+        <Route exact path="/artistprofile">
+          <ArtistProfile />
+        </Route>
         <Route exact path="/editartistprofile">
           <EditArtistProfile />
+        </Route>
+        <Route exact path="/art/:isEdit">
+          <AddArt />
         </Route>
         <Route exact path="/signin">
           <SignIn />

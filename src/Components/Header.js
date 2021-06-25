@@ -22,14 +22,19 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/signIn">
-                Sign IN
+              <Link className="nav-link" to="/artistprofile">
+                Profile
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/art/add">
+                ADD ART
               </Link>
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/signUp">
-                SIGN UP
+              <Link className="nav-link" to="/signIn">
+                Sign IN
               </Link>
             </li>
           </ul>

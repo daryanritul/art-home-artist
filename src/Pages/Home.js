@@ -1,14 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import ArtistProfile from "../Components/ArtistProfile";
+import ArtistProfile from "./ArtistProfile";
 
 const Home = ({ artistProfile }) => {
-  return (
-    <div className="container border mt-4">
-      <ArtistProfile />
-    </div>
-  );
+  return <div className="container border mt-4">hhaha</div>;
 };
 
 const mapStateToProps = (state) => ({

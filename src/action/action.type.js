@@ -6,11 +6,15 @@ export const SET_ISAUTHENTICATED = "SET_ISAUTHENTICATED";
 export const SET_IS_EMAIL_VERIFIED = "SET_IS_EMAIL_VERIFIED";
 
 // Uplaod Art Action
-export const SET_ART_CATEGORY = "SET_ART_CATEGORY";
 export const ADD_ART_TAG = "ADD_ART_TAG";
+export const DELETE_ART_TAG = "DELETE_ART_TAG";
+export const CLEAR_UPDATE_ART_STATE = "CLEAR_UPDATE_ART_STATE";
+export const SET_ART_CATEGORY = "SET_ART_CATEGORY";
 export const SET_ART_DOWNLOAD_URL = "SET_ART_DOWNLOAD_URL";
 export const SET_ART_IMAGE_URL = "SET_ART_IMAGE_URL";
-export const SET_ART_IMAGE_NAME = "SET_ART_IMAGE_NAME";
+export const SET_ART_NAME = "SET_ART_NAME";
+export const SET_ART_LIST = "SET_ART_LIST";
+export const SET_ART_DESCRIPATION = "SET_ART_DESCRIPATION";
 
 // artist update profile
 export const ADD_ARTIST_SOCIAL = "ADD_ARTIST_SOCIAL";
