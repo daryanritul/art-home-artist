@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
 import { toast } from "react-toastify";
+import { firebaseAuth, firestore } from "../firebase";
 import {
   CLEAR_UPDATE_ARTIST_PROFILE_STATE,
   SET_ARTIST_PROFILE,
@@ -7,18 +7,12 @@ import {
 
 export const getArtistProfile = (data) => async (dispatch) => {
   const { uid } = data;
-  console.log("FUN getArtistProfileC", data);
 
-  await firebase
-    .firestore()
-    .collection("artist")
-    .doc(uid)
-    .get()
-    .then((doc) => {
-      if (doc.data()) {
-        dispatch({ type: SET_ARTIST_PROFILE, payload: doc.data() });
-      }
-    });
+  const profileDoc = await firestore.collection("artist").doc(uid).get();
+
+  if (profileDoc.exists) {
+    dispatch({ type: SET_ARTIST_PROFILE, payload: profileDoc.data() });
+  }
 };
 
 export const updateArtistProfileFun =
@@ -26,9 +20,7 @@ export const updateArtistProfileFun =
   async (dispatch) => {
     const { bio, dateOfBirth, dateStarted, name, profilePicUrl, social } =
       updateArtistProfile;
-
-    firebase
-      .firestore()
+    firestore
       .collection("artist")
       .doc(uid)
       .update({
@@ -62,8 +54,7 @@ export const signIn = (data) => async (dispatch) => {
   console.log("data", data);
   const { email, password } = data;
 
-  firebase
-    .auth()
+  firebaseAuth
     .signInWithEmailAndPassword(email, password)
     .then((res) => {
       toast("Sign In", {

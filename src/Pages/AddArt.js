@@ -10,42 +10,59 @@ import {
   SET_ART_NAME,
   SET_ART_IMAGE_URL,
   SET_ART_DESCRIPATION,
+  SET_ART_ID,
 } from "../action/action.type";
-import { addArtFun } from "../action/art";
+import { addArtFun, updateArtFun } from "../action/art";
+import { firestore } from "../firebase";
 
-const AddArt = ({ uid, art, addArtFun }) => {
+const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
   const { isEdit } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { category, downloadUrl, description, artName, imageUrl, tag } = art;
+  const { category, downloadUrl, description, artName, imageUrl, tag, artId } =
+    art;
 
   const hnadleSubmit = () => {
-    addArtFun({
-      category,
-      downloadUrl,
-      description,
-      artName,
-      imageUrl,
-      tag,
-      history,
-      uid,
-    });
+    if (isEdit === "edit") {
+      console.log("updateArtFun");
+      updateArtFun({
+        category,
+        downloadUrl,
+        description,
+        artName,
+        imageUrl,
+        tag,
+        artId,
+        isEdit,
+        history,
+        uid,
+      });
+    } else {
+      console.log("addArtFun");
+      addArtFun({
+        category,
+        downloadUrl,
+        description,
+        artName,
+        imageUrl,
+        tag,
+        history,
+        uid,
+      });
+    }
   };
 
-  useEffect(() => {
-    if (isEdit === "edit" || isEdit === "add") {
-      if (isEdit === "edit") {
-        // do some this
-        console.log("isEdit");
-      }
-    } else {
+  useEffect(async () => {
+    if (isEdit !== "edit" && isEdit !== "add") {
       history.replace("/");
     }
   }, [isEdit]);
 
   return (
     <div className="container border border-2 border-success mt-2 p-2">
-      <h4 className="text-center text-primary">ADD ART</h4>
+      <h4 className="text-center text-primary">
+        {isEdit === "edit" ? "EDIT ART" : "ADD ART"}
+      </h4>
 
       <div>
         <label htmlFor="artName" className="form-label">
@@ -94,7 +111,7 @@ const AddArt = ({ uid, art, addArtFun }) => {
           type="text"
           name="descripation"
           placeholder="Enter descripation"
-          value={art.descripation}
+          value={art.description}
           onChange={(e) => {
             dispatch({
               type: SET_ART_DESCRIPATION,
@@ -193,6 +210,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   addArtFun: (data) => addArtFun(data),
+  updateArtFun: (data) => updateArtFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddArt);

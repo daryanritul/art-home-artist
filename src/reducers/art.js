@@ -8,6 +8,8 @@ import {
   SET_ART_DESCRIPATION,
   SET_ART_LIST,
   CLEAR_UPDATE_ART_STATE,
+  SET_STATE_TO_UPDATE_ART,
+  SET_ART_ID,
 } from "../action/action.type";
 
 const initialState = {
@@ -17,7 +19,8 @@ const initialState = {
   artName: "",
   imageUrl: "",
   tag: [],
-  artList: {},
+  artList: [],
+  artId: "",
 };
 
 export default (state = initialState, action) => {
@@ -37,6 +40,7 @@ export default (state = initialState, action) => {
         description: "",
         artName: "",
         imageUrl: "",
+        artId: "",
         tag: [],
       };
     case DELETE_ART_TAG:
@@ -63,6 +67,11 @@ export default (state = initialState, action) => {
         ...state,
         artName: action.payload,
       };
+    case SET_ART_ID:
+      return {
+        ...state,
+        artId: action.payload,
+      };
     case SET_ART_IMAGE_URL:
       return {
         ...state,
@@ -77,6 +86,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         artList: action.payload,
+      };
+    case SET_STATE_TO_UPDATE_ART:
+      const { category, downloadUrl, description, artName, imageUrl, tag, id } =
+        action.payload;
+      return {
+        ...state,
+        category,
+        downloadUrl,
+        description,
+        artName,
+        imageUrl,
+        tag,
+        artId: id,
       };
 
     default:

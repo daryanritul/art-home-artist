@@ -14,9 +14,6 @@ import AddArt from "./Pages/AddArt";
 
 import { getArtistProfile } from "./action/auth";
 
-// Firebase
-import firebase from "firebase/app";
-
 import { useDispatch, connect } from "react-redux";
 import {
   SET_ARTIST_EMAIL,
@@ -25,6 +22,7 @@ import {
   SET_ISAUTHENTICATED,
   SET_IS_EMAIL_VERIFIED,
 } from "./action/action.type";
+import { firebaseAuth } from "./firebase";
 
 const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
@@ -52,10 +50,9 @@ const App = ({ auth, getArtistProfile }) => {
   };
 
   useEffect(() => {
-    const susbcriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    const susbcriber = firebaseAuth.onAuthStateChanged(onAuthStateChanged);
     return susbcriber;
   }, []);
-  console.log("auth", auth);
 
   return (
     <Router>
