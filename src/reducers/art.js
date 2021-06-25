@@ -96,8 +96,15 @@ export default (state = initialState, action) => {
         artList: action.payload,
       };
     case SET_STATE_TO_UPDATE_ART:
-      const { category, downloadUrl, description, artName, imageUrl, tag, id } =
-        action.payload;
+      const {
+        category,
+        downloadUrl,
+        description,
+        artName,
+        imageUrl,
+        tag,
+        artId,
+      } = action.payload;
       return {
         ...state,
         category,
@@ -106,7 +113,7 @@ export default (state = initialState, action) => {
         artName,
         imageUrl,
         tag,
-        artId: id,
+        artId,
       };
 
     default:

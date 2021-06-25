@@ -25,6 +25,7 @@ const DisplayArt = ({ art, uid, deleteArtFun }) => {
       <div className="col-sm-6">
         <img src={art.imageUrl} className="w-75" />
       </div>
+
       <div className="col-sm-6">
         <h5>Art Name:</h5>
         <p>{art.artName}</p>
@@ -41,7 +42,7 @@ const DisplayArt = ({ art, uid, deleteArtFun }) => {
           <div>
             <h4>Aru you sure to delete Art</h4>
             <h5>
-              If You want to delete type{" "}
+              If You want to delete type
               <strong className="text-warning">delete</strong> in inpute box
             </h5>
             <input

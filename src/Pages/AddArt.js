@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 
 import { useHistory, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   ADD_ART_TAG,
   DELETE_ART_TAG,
@@ -10,10 +11,10 @@ import {
   SET_ART_NAME,
   SET_ART_IMAGE_URL,
   SET_ART_DESCRIPATION,
-  SET_ART_ID,
 } from "../action/action.type";
 import { addArtFun, updateArtFun } from "../action/art";
-import { firestore } from "../firebase";
+import ArtCategorySelector from "../Components/ArtCategorySelector";
+import ArtTagSelector from "../Components/ArtTagSelector";
 
 const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
   const { isEdit } = useParams();
@@ -122,22 +123,16 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
         <label htmlFor="category" className="form-label">
           category
         </label>
-
-        <select
-          className="form-select"
+        <ArtCategorySelector
+          name="category"
+          value={art.category}
           onChange={(e) => {
             dispatch({
               type: SET_ART_CATEGORY,
               payload: e.target.value,
             });
           }}
-        >
-          <option value="C++" selected>
-            C++
-          </option>
-          <option value="Java">Java</option>
-          <option value="Python">Python</option>
-        </select>
+        />
 
         <div>
           <h5>Artist tag list</h5>
@@ -177,23 +172,15 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
           <label htmlFor="tag" className="form-label">
             ADD TAG
           </label>
-          <select
-            className="form-select"
+          <ArtTagSelector
             onChange={(e) => {
+              console.log("e.target.value", e.target.value);
               dispatch({
                 type: ADD_ART_TAG,
                 payload: e.target.value,
               });
             }}
-          >
-            <option value="color" selected>
-              color
-            </option>
-            <option value="monocolor">monocolor</option>
-            <option value="red">red</option>
-            <option value="green">green</option>
-            <option value="white">white</option>
-          </select>
+          />
         </div>
         <button
           type="button"

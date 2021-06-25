@@ -133,30 +133,131 @@ export const deleteArtFun =
   };
 
 export const getArtListFun =
-  ({ uid }) =>
+  ({ uid, history, tagFilter, categoryFilter }) =>
   async (dispatch) => {
-    const snapshot = await firestore
-      .collection("artist")
-      .doc(uid)
-      .collection("art")
-      .orderBy("timeStamp", "desc")
-      .get();
+    try {
+      if (uid) {
+        const artList = firestore
+          .collection("artist")
+          .doc(uid)
+          .collection("art");
+        console.log("tagFilter", tagFilter);
+        console.log("categoryFilter", categoryFilter);
 
-    const tempDoc = snapshot.docs.map((doc) => {
-      return { artId: doc.id, ...doc.data() };
-    });
+        if (uid && tagFilter === "" && categoryFilter === "") {
+          console.log("if 1");
+          const snapshot = await artList.orderBy("timeStamp", "desc").get();
 
-    dispatch({ type: SET_ART_LIST, payload: tempDoc });
+          const tempDoc = snapshot.docs.map((doc) => {
+            return { artId: doc.id, ...doc.data() };
+          });
 
-    if (snapshot.empty) {
-      toast.warn("🦄 No Post Found!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+          dispatch({ type: SET_ART_LIST, payload: tempDoc });
+
+          if (snapshot.empty) {
+            toast.warn("🦄 No Post Found!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        } else if (uid && tagFilter === "" && categoryFilter !== "") {
+          console.log("if 2");
+
+          const snapshot = await artList
+            .where("category", "==", categoryFilter)
+            .orderBy("timeStamp", "desc")
+            .get();
+
+          const tempDoc = snapshot.docs.map((doc) => {
+            return { artId: doc.id, ...doc.data() };
+          });
+
+          dispatch({ type: SET_ART_LIST, payload: tempDoc });
+
+          if (snapshot.empty) {
+            toast.warn("🦄 No Post Found!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        } else if (uid && tagFilter !== "" && categoryFilter !== "") {
+          console.log("if 3");
+
+          const snapshot = await artList
+            .where("category", "==", categoryFilter)
+            .where("tag", "array-contains", tagFilter)
+            .orderBy("timeStamp", "desc")
+            .get();
+
+          const tempDoc = snapshot.docs.map((doc) => {
+            return { artId: doc.id, ...doc.data() };
+          });
+
+          dispatch({ type: SET_ART_LIST, payload: tempDoc });
+
+          if (snapshot.empty) {
+            toast.warn("🦄 No Post Found!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        } else if (uid && tagFilter !== "" && categoryFilter === "") {
+          console.log("if 4");
+
+          const snapshot = await artList
+            .where("tag", "array-contains", tagFilter)
+            .orderBy("timeStamp", "desc")
+            .get();
+
+          const tempDoc = snapshot.docs.map((doc) => {
+            return { artId: doc.id, ...doc.data() };
+          });
+
+          dispatch({ type: SET_ART_LIST, payload: tempDoc });
+
+          if (snapshot.empty) {
+            toast.warn("🦄 No Post Found!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        }
+      } else {
+        toast.warn("🦄 No Post Found!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        history.push("/");
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast(error.message, {
+        type: "error",
       });
     }
   };
