@@ -132,7 +132,9 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
             });
           }}
         >
-          <option value="C++">C++</option>
+          <option value="C++" selected>
+            C++
+          </option>
           <option value="Java">Java</option>
           <option value="Python">Python</option>
         </select>
@@ -184,7 +186,9 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
               });
             }}
           >
-            <option value="color">color</option>
+            <option value="color" selected>
+              color
+            </option>
             <option value="monocolor">monocolor</option>
             <option value="red">red</option>
             <option value="green">green</option>

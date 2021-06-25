@@ -10,6 +10,7 @@ import {
   CLEAR_UPDATE_ART_STATE,
   SET_STATE_TO_UPDATE_ART,
   SET_ART_ID,
+  REMOVE_ART_FROM_ARTLIST,
 } from "../action/action.type";
 
 const initialState = {
@@ -50,6 +51,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         tag: deleteArr,
+      };
+
+    case REMOVE_ART_FROM_ARTLIST:
+      const { artList } = state;
+      return {
+        ...state,
+        artList: artList.filter((art) => art.artId !== action.payload),
       };
     case SET_ART_CATEGORY:
       return {

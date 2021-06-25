@@ -1,6 +1,10 @@
 import { toast } from "react-toastify";
 import { firestore, fireStoreTimestamp } from "../firebase";
-import { CLEAR_UPDATE_ART_STATE, SET_ART_LIST } from "./action.type";
+import {
+  CLEAR_UPDATE_ART_STATE,
+  REMOVE_ART_FROM_ARTLIST,
+  SET_ART_LIST,
+} from "./action.type";
 
 export const addArtFun =
   ({
@@ -26,9 +30,10 @@ export const addArtFun =
         description,
         artName,
         imageUrl,
+        timeStamp: fireStoreTimestamp,
         tag,
       })
-      .then((res) => {
+      .then(() => {
         toast("Art Added", {
           type: "success",
         });
@@ -58,12 +63,9 @@ export const updateArtFun =
     history,
   }) =>
   async (dispatch) => {
+    console.log("category", category);
     try {
-      console.log("Update Fun indisn");
-      console.log("artId", artId);
-      console.log("uid", uid);
       if (artId && uid) {
-        console.log("Update Fun IFF");
         await firestore
           .collection("artist")
           .doc(uid)
@@ -79,7 +81,7 @@ export const updateArtFun =
             tag,
             timeStamp: fireStoreTimestamp,
           })
-          .then((res) => {
+          .then(() => {
             toast("Art Added", {
               type: "success",
             });
@@ -107,6 +109,29 @@ export const updateArtFun =
     }
   };
 
+export const deleteArtFun =
+  ({ uid, artId }) =>
+  async (dispatch) => {
+    await firestore
+      .collection("artist")
+      .doc(uid)
+      .collection("art")
+      .doc(artId)
+      .delete()
+      .then(() => {
+        toast("Art Delete", {
+          type: "success",
+        });
+        dispatch({ type: REMOVE_ART_FROM_ARTLIST, payload: artId });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(error.message, {
+          type: "error",
+        });
+      });
+  };
+
 export const getArtListFun =
   ({ uid }) =>
   async (dispatch) => {
@@ -114,10 +139,11 @@ export const getArtListFun =
       .collection("artist")
       .doc(uid)
       .collection("art")
+      .orderBy("timeStamp", "desc")
       .get();
 
     const tempDoc = snapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
+      return { artId: doc.id, ...doc.data() };
     });
 
     dispatch({ type: SET_ART_LIST, payload: tempDoc });
