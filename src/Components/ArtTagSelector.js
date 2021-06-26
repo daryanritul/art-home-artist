@@ -8,7 +8,7 @@ const ArtTagSelector = ({ name, onChange, value = null }) => {
       className="form-select"
       onChange={onChange}
     >
-      <option value="" disabled selected hidden>
+      <option value="" disabled hidden>
         Select
       </option>
       <option value="color" selected>

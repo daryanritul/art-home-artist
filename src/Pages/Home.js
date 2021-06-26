@@ -50,9 +50,10 @@ const Home = ({ artList, uid, getArtListFun }) => {
             }}
           />
         </div>
+
         <div className="col-lg-4 ">
           <div
-            class="btn-group btn-group-lg m-4 "
+            className="btn-group btn-group-lg m-4"
             role="group"
             aria-label="Basic mixed styles example"
           >

@@ -23,6 +23,7 @@ import {
   SET_IS_EMAIL_VERIFIED,
 } from "./action/action.type";
 import { firebaseAuth } from "./firebase";
+import Archive from "./Pages/Archive";
 
 const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
@@ -62,6 +63,9 @@ const App = ({ auth, getArtistProfile }) => {
       <Switch>
         <Route exact path="/">
           <Home />
+        </Route>
+        <Route exact path="/archive">
+          <Archive />
         </Route>
         <Route exact path="/artistprofile">
           <ArtistProfile />

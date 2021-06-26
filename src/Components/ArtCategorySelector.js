@@ -8,7 +8,7 @@ const ArtCategorySelector = ({ value = null, onChange, name }) => {
       onChange={onChange}
       className="form-select"
     >
-      <option value="" disabled selected hidden>
+      <option value="" disabled hidden>
         Select
       </option>
       <option value="c++">C++</option>

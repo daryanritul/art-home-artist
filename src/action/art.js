@@ -4,7 +4,8 @@ import {
   CLEAR_ADD_ART_STATE,
   REMOVE_ART_FROM_ARTLIST,
   SET_ART_LIST,
-  TOGGLE_ART_IS_ARCHIVE_FROM_ARTLIST,
+  REMOVE_ARCHIVE_ART_FROM_ART,
+  SET_ARCHIVE_ART_LIST,
 } from "./action.type";
 
 export const addArtFun =
@@ -144,7 +145,10 @@ export const getArtListFun =
   async (dispatch) => {
     try {
       if (uid) {
-        const artList = firestore.collection("art").where("uid", "==", uid);
+        const artList = firestore
+          .collection("art")
+          .where("uid", "==", uid)
+          .where("isArchive", "==", false);
 
         if (uid && tagFilter === "" && categoryFilter === "") {
           console.log("if 1");
@@ -264,6 +268,56 @@ export const getArtListFun =
     }
   };
 
+export const getArchiveArtFun =
+  ({ uid, history }) =>
+  async (dispatch) => {
+    try {
+      if (uid) {
+        const artList = firestore
+          .collection("art")
+          .where("uid", "==", uid)
+          .where("isArchive", "==", true)
+          .orderBy("timeStamp", "desc");
+
+        const snapshot = await artList.get();
+
+        const tempDoc = snapshot.docs.map((doc) => {
+          return { artId: doc.id, ...doc.data() };
+        });
+
+        dispatch({ type: SET_ARCHIVE_ART_LIST, payload: tempDoc });
+
+        if (snapshot.empty) {
+          toast.warn("🦄 No Post Found!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        toast.warn("🦄 No Post Found!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        history.push("/");
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast(error.message, {
+        type: "error",
+      });
+    }
+  };
+
 export const toggleArtArchiveFun =
   ({ artId, archiveValue }) =>
   async (dispatch) => {
@@ -276,11 +330,18 @@ export const toggleArtArchiveFun =
             isArchive: archiveValue,
           })
           .then(() => {
-            toast("Art Moved to Archive", {
-              type: "success",
-            });
+            if (archiveValue) {
+              toast("Art Moved to Archive", {
+                type: "success",
+              });
+            } else {
+              toast("Art Moved to Public", {
+                type: "success",
+              });
+            }
+
             dispatch({
-              type: TOGGLE_ART_IS_ARCHIVE_FROM_ARTLIST,
+              type: REMOVE_ARCHIVE_ART_FROM_ART,
               payload: { artId, archiveValue },
             });
           })
