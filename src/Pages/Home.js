@@ -50,28 +50,44 @@ const Home = ({ artList, uid, getArtListFun }) => {
             }}
           />
         </div>
-        <div className="col-lg-4">
-          <button
-            className="btn btn-success btn-lg m-4"
-            onClick={() => handleFilter()}
+        <div className="col-lg-4 ">
+          <div
+            class="btn-group btn-group-lg m-4 "
+            role="group"
+            aria-label="Basic mixed styles example"
           >
-            Filter
-          </button>
-          <button
-            className="btn btn-primary btn-lg m-4"
-            onClick={() => {
-              setTagFilter("");
-              setCategoryFilter("");
-            }}
-          >
-            Clear
-          </button>
+            <button className="btn btn-success " onClick={() => handleFilter()}>
+              Filter
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setTagFilter("");
+                setCategoryFilter("");
+              }}
+            >
+              Clear
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                getArtListFun({
+                  uid,
+                  history,
+                  tagFilter: "",
+                  categoryFilter: "",
+                });
+              }}
+            >
+              Fetch All
+            </button>
+          </div>
         </div>
       </div>
 
       <h1 className="text-center text-primary">List of Art</h1>
       {artList.map((art) => (
-        <DisplayArt art={art} />
+        <DisplayArt art={art} key={art.artId} />
       ))}
     </div>
   );

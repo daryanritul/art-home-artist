@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
 import { firestore, fireStoreTimestamp } from "../firebase";
 import {
-  CLEAR_UPDATE_ART_STATE,
+  CLEAR_ADD_ART_STATE,
   REMOVE_ART_FROM_ARTLIST,
   SET_ART_LIST,
+  TOGGLE_ART_IS_ARCHIVE_FROM_ARTLIST,
 } from "./action.type";
 
 export const addArtFun =
@@ -16,15 +17,14 @@ export const addArtFun =
     tag,
     uid,
     history,
+    artistProfile,
   }) =>
   async (dispatch) => {
     firestore
-      .collection("artist")
-      .doc(uid)
       .collection("art")
       .doc()
       .set({
-        artistUid: uid,
+        uid,
         category,
         downloadUrl,
         description,
@@ -32,13 +32,19 @@ export const addArtFun =
         imageUrl,
         timeStamp: fireStoreTimestamp,
         tag,
+        isArchive: false,
+        artistProfile: {
+          name: artistProfile.name,
+          profilePicUrl: artistProfile.profilePicUrl,
+          dateStarted: artistProfile.dateStarted,
+        },
       })
       .then(() => {
         toast("Art Added", {
           type: "success",
         });
         dispatch({
-          type: CLEAR_UPDATE_ART_STATE,
+          type: CLEAR_ADD_ART_STATE,
         });
         history.push("/");
       })
@@ -60,19 +66,17 @@ export const updateArtFun =
     tag,
     artId,
     uid,
+    artistProfile,
     history,
   }) =>
   async (dispatch) => {
-    console.log("category", category);
     try {
       if (artId && uid) {
         await firestore
-          .collection("artist")
-          .doc(uid)
           .collection("art")
           .doc(artId)
-          .set({
-            artistUid: uid,
+          .update({
+            uid,
             category,
             downloadUrl,
             description,
@@ -80,13 +84,18 @@ export const updateArtFun =
             imageUrl,
             tag,
             timeStamp: fireStoreTimestamp,
+            artistProfile: {
+              name: artistProfile.name,
+              profilePicUrl: artistProfile.proprofilePicUrlfilePic,
+              dateStarted: artistProfile.dateStarted,
+            },
           })
           .then(() => {
             toast("Art Added", {
               type: "success",
             });
             dispatch({
-              type: CLEAR_UPDATE_ART_STATE,
+              type: CLEAR_ADD_ART_STATE,
             });
             history.push("/");
           })
@@ -110,11 +119,9 @@ export const updateArtFun =
   };
 
 export const deleteArtFun =
-  ({ uid, artId }) =>
+  ({ artId }) =>
   async (dispatch) => {
     await firestore
-      .collection("artist")
-      .doc(uid)
       .collection("art")
       .doc(artId)
       .delete()
@@ -137,12 +144,7 @@ export const getArtListFun =
   async (dispatch) => {
     try {
       if (uid) {
-        const artList = firestore
-          .collection("artist")
-          .doc(uid)
-          .collection("art");
-        console.log("tagFilter", tagFilter);
-        console.log("categoryFilter", categoryFilter);
+        const artList = firestore.collection("art").where("uid", "==", uid);
 
         if (uid && tagFilter === "" && categoryFilter === "") {
           console.log("if 1");
@@ -257,6 +259,44 @@ export const getArtListFun =
     } catch (error) {
       console.log("error", error);
       toast(error.message, {
+        type: "error",
+      });
+    }
+  };
+
+export const toggleArtArchiveFun =
+  ({ artId, archiveValue }) =>
+  async (dispatch) => {
+    try {
+      if (artId) {
+        await firestore
+          .collection("art")
+          .doc(artId)
+          .update({
+            isArchive: archiveValue,
+          })
+          .then(() => {
+            toast("Art Moved to Archive", {
+              type: "success",
+            });
+            dispatch({
+              type: TOGGLE_ART_IS_ARCHIVE_FROM_ARTLIST,
+              payload: { artId, archiveValue },
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            toast(error.message, {
+              type: "error",
+            });
+          });
+      } else {
+        toast("We Dont Recive Art id .... Please Try agnain", {
+          type: "error",
+        });
+      }
+    } catch (error) {
+      toast(error, {
         type: "error",
       });
     }

@@ -16,12 +16,12 @@ import { addArtFun, updateArtFun } from "../action/art";
 import ArtCategorySelector from "../Components/ArtCategorySelector";
 import ArtTagSelector from "../Components/ArtTagSelector";
 
-const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
+const AddArt = ({ uid, addArt, artistProfile, addArtFun, updateArtFun }) => {
   const { isEdit } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const { category, downloadUrl, description, artName, imageUrl, tag, artId } =
-    art;
+    addArt;
 
   const hnadleSubmit = () => {
     if (isEdit === "edit") {
@@ -37,6 +37,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
         isEdit,
         history,
         uid,
+        artistProfile,
       });
     } else {
       console.log("addArtFun");
@@ -49,6 +50,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
         tag,
         history,
         uid,
+        artistProfile,
       });
     }
   };
@@ -74,7 +76,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
           type="text"
           name="artName"
           placeholder="Enter Art Name"
-          value={art.artName}
+          value={artName}
           onChange={(e) => {
             dispatch({
               type: SET_ART_NAME,
@@ -91,7 +93,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
           type="text"
           name="artImageUrl"
           placeholder="Enter Profile Pic Url"
-          value={art.imageUrl}
+          value={imageUrl}
           onChange={(e) => {
             dispatch({
               type: SET_ART_IMAGE_URL,
@@ -112,7 +114,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
           type="text"
           name="descripation"
           placeholder="Enter descripation"
-          value={art.description}
+          value={description}
           onChange={(e) => {
             dispatch({
               type: SET_ART_DESCRIPATION,
@@ -125,7 +127,7 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
         </label>
         <ArtCategorySelector
           name="category"
-          value={art.category}
+          value={category}
           onChange={(e) => {
             dispatch({
               type: SET_ART_CATEGORY,
@@ -143,11 +145,11 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
               </tr>
             </thead>
             <tbody>
-              {art.tag &&
-                art.tag.map((tag, index) => {
+              {tag &&
+                tag.map((tagName, index) => {
                   return (
                     <tr key={index}>
-                      <td>{tag}</td>
+                      <td>{tagName}</td>
                       <td>
                         <button
                           className="btn btn-primary"
@@ -169,12 +171,12 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
         </div>
 
         <div className="border border-2 m-3 p-2">
-          <label htmlFor="tag" className="form-label">
+          <label htmlFor="tagSelect" className="form-label">
             ADD TAG
           </label>
           <ArtTagSelector
+            name="tagSelect"
             onChange={(e) => {
-              console.log("e.target.value", e.target.value);
               dispatch({
                 type: ADD_ART_TAG,
                 payload: e.target.value,
@@ -196,7 +198,8 @@ const AddArt = ({ uid, art, addArtFun, updateArtFun }) => {
 
 const mapStateToProps = (state) => ({
   uid: state.auth.uid,
-  art: state.art,
+  artistProfile: state.auth.artistProfile,
+  addArt: state.addArt,
 });
 
 const mapDispatchToProps = {
