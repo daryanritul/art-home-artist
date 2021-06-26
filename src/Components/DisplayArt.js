@@ -2,9 +2,19 @@ import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { SET_STATE_TO_UPDATE_ART } from "../action/action.type";
-import { deleteArtFun, toggleArtArchiveFun } from "../action/art";
+import {
+  deleteArtFun,
+  toggleArtArchiveFun,
+  deleteArtImageFun,
+} from "../action/art";
 
-const DisplayArt = ({ art, uid, deleteArtFun, toggleArtArchiveFun }) => {
+const DisplayArt = ({
+  art,
+  uid,
+  deleteArtFun,
+  toggleArtArchiveFun,
+  deleteArtImageFun,
+}) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [showConfirmDeleteInput, setShowConfirmDeleteInput] = useState(false);
@@ -12,9 +22,10 @@ const DisplayArt = ({ art, uid, deleteArtFun, toggleArtArchiveFun }) => {
 
   const handleDelete = () => {
     if (inputForConfirmDelete === "delete") {
-      deleteArtFun({ uid, artId: art.artId });
+      deleteArtFun({ uid, artId: art.artId, archiveValue: !art.isArchive });
       setInputForConfirmDelete("");
       setShowConfirmDeleteInput(false);
+      deleteArtImageFun({ uid, downloadName: art.downloadName });
     } else {
       setInputForConfirmDelete("");
     }
@@ -87,6 +98,7 @@ const DisplayArt = ({ art, uid, deleteArtFun, toggleArtArchiveFun }) => {
               >
                 Edit
               </button>
+
               {art.isArchive ? (
                 <button
                   className="btn btn-primary m-1"
@@ -122,6 +134,54 @@ const DisplayArt = ({ art, uid, deleteArtFun, toggleArtArchiveFun }) => {
             </div>
           )}
         </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Download
+        </button>
+      </div>
+
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Download Image
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="row">
+                <a href={art.downloadUrl} download>
+                  <img src={art.downloadUrl} className="w-75" />
+                </a>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -133,6 +193,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   deleteArtFun: (data) => deleteArtFun(data),
   toggleArtArchiveFun: (data) => toggleArtArchiveFun(data),
+  deleteArtImageFun: (data) => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayArt);

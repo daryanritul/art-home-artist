@@ -9,11 +9,15 @@ import {
   CLEAR_ADD_ART_STATE,
   SET_STATE_TO_UPDATE_ART,
   SET_ART_ID,
+  SET_ART_DOWNLOAD_UPLOAD_STATUS,
+  SET_ART_DOWNLOAD_NAME,
 } from "../action/action.type";
 
 const initialState = {
   category: "",
   downloadUrl: "",
+  downloadName: "",
+  downloadUploadStatus: "",
   description: "",
   artName: "",
   imageUrl: "",
@@ -59,6 +63,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         downloadUrl: action.payload,
+      };
+    case SET_ART_DOWNLOAD_NAME:
+      return {
+        ...state,
+        downloadName: action.payload,
+      };
+    case SET_ART_DOWNLOAD_UPLOAD_STATUS:
+      return {
+        ...state,
+        downloadUploadStatus: action.payload,
       };
 
     case SET_ART_NAME:

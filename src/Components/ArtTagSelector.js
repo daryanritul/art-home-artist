@@ -1,6 +1,6 @@
 import React from "react";
 
-const ArtTagSelector = ({ name, onChange, value = null }) => {
+const ArtTagSelector = ({ name, onChange, value = "" }) => {
   return (
     <select
       name={name}
@@ -11,9 +11,7 @@ const ArtTagSelector = ({ name, onChange, value = null }) => {
       <option value="" disabled hidden>
         Select
       </option>
-      <option value="color" selected>
-        color
-      </option>
+      <option value="color">color</option>
       <option value="monocolor">monocolor</option>
       <option value="red">red</option>
       <option value="green">green</option>

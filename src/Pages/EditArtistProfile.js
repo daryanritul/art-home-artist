@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
-import { updateArtistProfileFun } from "../action/auth";
+import { updateArtistProfileFun, uploadProfileImageFun } from "../action/auth";
 
 import {
   ADD_ARTIST_SOCIAL,
@@ -21,6 +21,7 @@ const EditArtistProfile = ({
   updateArtistProfile,
   uid,
   updateArtistProfileFun,
+  uploadProfileImageFun,
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -51,19 +52,20 @@ const EditArtistProfile = ({
         <label htmlFor="profilePicUrl" className="form-label">
           Profile Pic
         </label>
-        <input
-          className="form-control"
-          type="text"
-          name="profilePicUrl"
-          placeholder="Enter Profile Pic Url"
-          value={updateArtistProfile.profilePicUrl}
-          onChange={(e) => {
-            dispatch({
-              type: SET_ARTIST_PROFILE_PIC_URL,
-              payload: e.target.value,
-            });
-          }}
-        />
+        <div className="row">
+          <div className="col-md-8">
+            <input
+              type="file"
+              accept="image/*"
+              className="form-control"
+              onChange={(event) => uploadProfileImageFun({ event, uid })}
+            />
+            <p>{updateArtistProfile.profilePicUploadStatus}</p>
+          </div>
+          <div className="col-md-4">
+            <img src={updateArtistProfile.profilePicUrl} className="w-50" />
+          </div>
+        </div>
 
         <label htmlFor="dateOfBirth" className="form-label">
           Date Of Birth
@@ -227,6 +229,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   updateArtistProfileFun: (data) => updateArtistProfileFun(data),
+  uploadProfileImageFun: (data) => uploadProfileImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditArtistProfile);

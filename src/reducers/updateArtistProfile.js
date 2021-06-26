@@ -11,6 +11,7 @@ import {
   CLEAR_UPDATE_ARTIST_PROFILE_STATE,
   SET_ARTIST_PROFILE_UPDATE_DATA,
   DELETE_ARTIST_SOCIAL,
+  SET_ARTIST_PROFILE_PIC_UPLOAD_STATUS,
 } from "../action/action.type";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   dateStarted: "",
   name: "",
   profilePicUrl: "",
+  profilePicUploadStatus: "",
   social: [],
   socialID: "",
   socialLink: "",
@@ -81,6 +83,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profilePicUrl: action.payload,
+      };
+    case SET_ARTIST_PROFILE_PIC_UPLOAD_STATUS:
+      return {
+        ...state,
+        profilePicUploadStatus: action.payload,
       };
 
     case SET_ARTIST_SOCIAL_ID:

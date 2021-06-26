@@ -12,16 +12,38 @@ import {
   SET_ART_IMAGE_URL,
   SET_ART_DESCRIPATION,
 } from "../action/action.type";
-import { addArtFun, updateArtFun } from "../action/art";
+import {
+  addArtFun,
+  updateArtFun,
+  uploadArtImageFun,
+  deleteArtImageFun,
+} from "../action/art";
 import ArtCategorySelector from "../Components/ArtCategorySelector";
 import ArtTagSelector from "../Components/ArtTagSelector";
 
-const AddArt = ({ uid, addArt, artistProfile, addArtFun, updateArtFun }) => {
+const AddArt = ({
+  uid,
+  addArt,
+  artistProfile,
+  addArtFun,
+  updateArtFun,
+  uploadArtImageFun,
+  deleteArtImageFun,
+}) => {
   const { isEdit } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { category, downloadUrl, description, artName, imageUrl, tag, artId } =
-    addArt;
+  const {
+    category,
+    downloadUrl,
+    description,
+    artName,
+    imageUrl,
+    tag,
+    artId,
+    downloadUploadStatus,
+    downloadName,
+  } = addArt;
 
   const hnadleSubmit = () => {
     if (isEdit === "edit") {
@@ -86,25 +108,27 @@ const AddArt = ({ uid, addArt, artistProfile, addArtFun, updateArtFun }) => {
         />
 
         <label htmlFor="artImageUrl" className="form-label">
-          Art Image Url
+          Art Image
         </label>
-        <input
-          className="form-control"
-          type="text"
-          name="artImageUrl"
-          placeholder="Enter Profile Pic Url"
-          value={imageUrl}
-          onChange={(e) => {
-            dispatch({
-              type: SET_ART_IMAGE_URL,
-              payload: e.target.value,
-            });
-            dispatch({
-              type: SET_ART_DOWNLOAD_URL,
-              payload: e.target.value,
-            });
-          }}
-        />
+        <div className="row">
+          <div className="col-md-8">
+            <input
+              type="file"
+              accept="image/*"
+              className="form-control"
+              onChange={(event) => {
+                uploadArtImageFun({ event, uid });
+                if (isEdit == "edit") {
+                  deleteArtImageFun({ uid, downloadName });
+                }
+              }}
+            />
+            <p>Image Upload Status {downloadUploadStatus}</p>
+          </div>
+          <div className="col-md-4">
+            <img src={imageUrl} className="w-50" />
+          </div>
+        </div>
 
         <label htmlFor="descripation" className="form-label">
           Descripation
@@ -205,6 +229,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   addArtFun: (data) => addArtFun(data),
   updateArtFun: (data) => updateArtFun(data),
+  uploadArtImageFun: (data) => uploadArtImageFun(data),
+  deleteArtImageFun: (data) => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddArt);

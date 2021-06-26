@@ -1,11 +1,16 @@
+import imageCompression from "browser-image-compression";
+import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
-import { firestore, fireStoreTimestamp } from "../firebase";
+import { firestore, fireStoreTimestamp, storage } from "../firebase";
 import {
   CLEAR_ADD_ART_STATE,
-  REMOVE_ART_FROM_ARTLIST,
   SET_ART_LIST,
-  REMOVE_ARCHIVE_ART_FROM_ART,
+  REMOVE_ART_FROM_ART,
   SET_ARCHIVE_ART_LIST,
+  SET_ART_IMAGE_URL,
+  SET_ART_DOWNLOAD_URL,
+  SET_ART_DOWNLOAD_UPLOAD_STATUS,
+  SET_ART_DOWNLOAD_NAME,
 } from "./action.type";
 
 export const addArtFun =
@@ -34,11 +39,9 @@ export const addArtFun =
         timeStamp: fireStoreTimestamp,
         tag,
         isArchive: false,
-        artistProfile: {
-          name: artistProfile.name,
-          profilePicUrl: artistProfile.profilePicUrl,
-          dateStarted: artistProfile.dateStarted,
-        },
+        artistname: artistProfile.name,
+        artistprofilePicUrl: artistProfile.profilePicUrl,
+        artistdateStarted: artistProfile.dateStarted,
       })
       .then(() => {
         toast("Art Added", {
@@ -66,18 +69,17 @@ export const updateArtFun =
     imageUrl,
     tag,
     artId,
-    uid,
     artistProfile,
     history,
   }) =>
   async (dispatch) => {
+    console.log("Update Art FUn");
     try {
-      if (artId && uid) {
+      if (artId) {
         await firestore
           .collection("art")
           .doc(artId)
           .update({
-            uid,
             category,
             downloadUrl,
             description,
@@ -85,11 +87,9 @@ export const updateArtFun =
             imageUrl,
             tag,
             timeStamp: fireStoreTimestamp,
-            artistProfile: {
-              name: artistProfile.name,
-              profilePicUrl: artistProfile.proprofilePicUrlfilePic,
-              dateStarted: artistProfile.dateStarted,
-            },
+            artistname: artistProfile.name,
+            artistprofilePicUrl: artistProfile.profilePicUrl,
+            artistdateStarted: artistProfile.dateStarted,
           })
           .then(() => {
             toast("Art Added", {
@@ -107,7 +107,7 @@ export const updateArtFun =
             });
           });
       } else {
-        toast("We Dont Recive Art id .... Please Try agnain", {
+        toast("We Dont Recive Art id or User ID .... Please Try agnain", {
           type: "error",
         });
         history.push("/");
@@ -120,7 +120,7 @@ export const updateArtFun =
   };
 
 export const deleteArtFun =
-  ({ artId }) =>
+  ({ artId, archiveValue }) =>
   async (dispatch) => {
     await firestore
       .collection("art")
@@ -130,7 +130,10 @@ export const deleteArtFun =
         toast("Art Delete", {
           type: "success",
         });
-        dispatch({ type: REMOVE_ART_FROM_ARTLIST, payload: artId });
+        dispatch({
+          type: REMOVE_ART_FROM_ART,
+          payload: { artId, archiveValue },
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -341,7 +344,7 @@ export const toggleArtArchiveFun =
             }
 
             dispatch({
-              type: REMOVE_ARCHIVE_ART_FROM_ART,
+              type: REMOVE_ART_FROM_ART,
               payload: { artId, archiveValue },
             });
           })
@@ -361,4 +364,128 @@ export const toggleArtArchiveFun =
         type: "error",
       });
     }
+  };
+
+export const uploadArtImageFun =
+  ({ event, uid }) =>
+  async (dispatch) => {
+    try {
+      const imageFile = event.target.files[0];
+
+      console.log("imageFile", imageFile.name);
+      const options = {
+        maxSizeMB: 0.4,
+        maxWidthOrHeight: 340,
+        useWebWorker: true,
+      };
+      // TO compress file
+      const compressedFile = await imageCompression(imageFile, options);
+      // To gernate Uniq file letter name for file
+      const fileId = nanoid(5);
+
+      dispatch({
+        type: SET_ART_DOWNLOAD_NAME,
+        payload: fileId + imageFile.name,
+      });
+
+      // Gernating referance to upload compress image
+
+      var storageRefCompressedFile = storage.ref(
+        uid + "/COMP" + fileId + imageFile.name
+      );
+      // Upload task start
+      const uploadTaskCompressedFile =
+        storageRefCompressedFile.put(compressedFile);
+      // track task
+      uploadTaskCompressedFile.on(
+        "state_changed",
+        (snapshot) => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Art Image Upload  is " + progress + "% done");
+        },
+        (error) => {
+          toast(error.message, {
+            type: "error",
+          });
+        },
+        () => {
+          uploadTaskCompressedFile.snapshot.ref
+            .getDownloadURL()
+            .then((downloadURL) => {
+              console.log("downloadURL COM", downloadURL);
+              dispatch({
+                type: SET_ART_IMAGE_URL,
+                payload: downloadURL,
+              });
+            });
+        }
+      );
+
+      // Referance to upload full size image
+      var storageRef = storage.ref(uid + "/" + fileId + imageFile.name);
+      // Upload task start
+
+      const uploadTask = storageRef.put(imageFile);
+      // Track task
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Image Upload  is " + progress + "% done");
+          dispatch({
+            type: SET_ART_DOWNLOAD_UPLOAD_STATUS,
+            payload: "Image Upload  is " + progress + "% done",
+          });
+        },
+        (error) => {
+          toast(error.message, {
+            type: "error",
+          });
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            dispatch({
+              type: SET_ART_DOWNLOAD_URL,
+              payload: downloadURL,
+            });
+          });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      toast(error.message, {
+        type: "error",
+      });
+    }
+  };
+
+export const deleteArtImageFun =
+  ({ uid, downloadName }) =>
+  async (dispatch) => {
+    console.log("downloadName", downloadName);
+    const storageRef = storage.ref();
+    const compImageref = storageRef.child(uid + "/COMP" + downloadName);
+
+    // Delete the file
+    compImageref
+      .delete()
+      .then(() => {
+        console.log("File delted");
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+    const imageref = storageRef.child(uid + "/" + downloadName);
+
+    // Delete the file
+    imageref
+      .delete()
+      .then(() => {
+        console.log("File delted");
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
   };
