@@ -1,7 +1,9 @@
 import imageCompression from "browser-image-compression";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
-import { firestore, fireStoreTimestamp, storage } from "../firebase";
+import { firestore, storage } from "../firebase";
+import firebase from "firebase/app";
+
 import {
   CLEAR_ADD_ART_STATE,
   SET_ART_LIST,
@@ -11,6 +13,7 @@ import {
   SET_ART_DOWNLOAD_URL,
   SET_ART_DOWNLOAD_UPLOAD_STATUS,
   SET_ART_DOWNLOAD_NAME,
+  SET_LAST_ART,
 } from "./action.type";
 
 export const addArtFun =
@@ -36,7 +39,7 @@ export const addArtFun =
         description,
         artName,
         imageUrl,
-        timeStamp: fireStoreTimestamp,
+        timeStamp: firebase.firestore.Timestamp.now(),
         tag,
         isArchive: false,
         artistname: artistProfile.name,
@@ -73,7 +76,6 @@ export const updateArtFun =
     history,
   }) =>
   async (dispatch) => {
-    console.log("Update Art FUn");
     try {
       if (artId) {
         await firestore
@@ -86,7 +88,7 @@ export const updateArtFun =
             artName,
             imageUrl,
             tag,
-            timeStamp: fireStoreTimestamp,
+            timeStamp: firebase.firestore.Timestamp.now(),
             artistname: artistProfile.name,
             artistprofilePicUrl: artistProfile.profilePicUrl,
             artistdateStarted: artistProfile.dateStarted,
@@ -144,7 +146,7 @@ export const deleteArtFun =
   };
 
 export const getArtListFun =
-  ({ uid, history, tagFilter, categoryFilter }) =>
+  ({ uid, history, tagFilter, categoryFilter, lastArt }) =>
   async (dispatch) => {
     try {
       if (uid) {
@@ -154,14 +156,11 @@ export const getArtListFun =
           .where("isArchive", "==", false);
 
         if (uid && tagFilter === "" && categoryFilter === "") {
-          console.log("if 1");
-          const snapshot = await artList.orderBy("timeStamp", "desc").get();
-
-          const tempDoc = snapshot.docs.map((doc) => {
-            return { artId: doc.id, ...doc.data() };
-          });
-
-          dispatch({ type: SET_ART_LIST, payload: tempDoc });
+          const snapshot = await artList
+            .orderBy("timeStamp", "desc")
+            .startAfter(lastArt)
+            .limit(4)
+            .get();
 
           if (snapshot.empty) {
             toast.warn("🦄 No Post Found!", {
@@ -173,20 +172,23 @@ export const getArtListFun =
               draggable: true,
               progress: undefined,
             });
+          } else {
+            const tempDoc = snapshot.docs.map((doc) => {
+              return { artId: doc.id, ...doc.data() };
+            });
+            dispatch({
+              type: SET_LAST_ART,
+              payload: snapshot.docs[snapshot.docs.length - 1],
+            });
+            dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
         } else if (uid && tagFilter === "" && categoryFilter !== "") {
-          console.log("if 2");
-
           const snapshot = await artList
             .where("category", "==", categoryFilter)
             .orderBy("timeStamp", "desc")
+            .startAfter(lastArt)
+            .limit(4)
             .get();
-
-          const tempDoc = snapshot.docs.map((doc) => {
-            return { artId: doc.id, ...doc.data() };
-          });
-
-          dispatch({ type: SET_ART_LIST, payload: tempDoc });
 
           if (snapshot.empty) {
             toast.warn("🦄 No Post Found!", {
@@ -198,21 +200,24 @@ export const getArtListFun =
               draggable: true,
               progress: undefined,
             });
+          } else {
+            const tempDoc = snapshot.docs.map((doc) => {
+              return { artId: doc.id, ...doc.data() };
+            });
+            dispatch({
+              type: SET_LAST_ART,
+              payload: snapshot.docs[snapshot.docs.length - 1],
+            });
+            dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
         } else if (uid && tagFilter !== "" && categoryFilter !== "") {
-          console.log("if 3");
-
           const snapshot = await artList
             .where("category", "==", categoryFilter)
             .where("tag", "array-contains", tagFilter)
             .orderBy("timeStamp", "desc")
+            .startAfter(lastArt)
+            .limit(4)
             .get();
-
-          const tempDoc = snapshot.docs.map((doc) => {
-            return { artId: doc.id, ...doc.data() };
-          });
-
-          dispatch({ type: SET_ART_LIST, payload: tempDoc });
 
           if (snapshot.empty) {
             toast.warn("🦄 No Post Found!", {
@@ -224,20 +229,23 @@ export const getArtListFun =
               draggable: true,
               progress: undefined,
             });
+          } else {
+            const tempDoc = snapshot.docs.map((doc) => {
+              return { artId: doc.id, ...doc.data() };
+            });
+            dispatch({
+              type: SET_LAST_ART,
+              payload: snapshot.docs[snapshot.docs.length - 1],
+            });
+            dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
         } else if (uid && tagFilter !== "" && categoryFilter === "") {
-          console.log("if 4");
-
           const snapshot = await artList
             .where("tag", "array-contains", tagFilter)
             .orderBy("timeStamp", "desc")
+            .startAfter(lastArt)
+            .limit(4)
             .get();
-
-          const tempDoc = snapshot.docs.map((doc) => {
-            return { artId: doc.id, ...doc.data() };
-          });
-
-          dispatch({ type: SET_ART_LIST, payload: tempDoc });
 
           if (snapshot.empty) {
             toast.warn("🦄 No Post Found!", {
@@ -249,6 +257,15 @@ export const getArtListFun =
               draggable: true,
               progress: undefined,
             });
+          } else {
+            const tempDoc = snapshot.docs.map((doc) => {
+              return { artId: doc.id, ...doc.data() };
+            });
+            dispatch({
+              type: SET_LAST_ART,
+              payload: snapshot.docs[snapshot.docs.length - 1],
+            });
+            dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
         }
       } else {
@@ -291,7 +308,7 @@ export const getArchiveArtFun =
         dispatch({ type: SET_ARCHIVE_ART_LIST, payload: tempDoc });
 
         if (snapshot.empty) {
-          toast.warn("🦄 No Post Found!", {
+          toast.warn("🦄 No ART Found!", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -302,7 +319,7 @@ export const getArchiveArtFun =
           });
         }
       } else {
-        toast.warn("🦄 No Post Found!", {
+        toast.warn("🦄 Some Thing Went Wrong!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

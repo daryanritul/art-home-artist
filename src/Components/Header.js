@@ -36,6 +36,11 @@ const Header = () => {
                 ADD ART
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/chat">
+                Chat
+              </Link>
+            </li>
 
             <li className="nav-item">
               <Link className="nav-link" to="/signIn">

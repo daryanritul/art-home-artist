@@ -1,25 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { SET_ART_CATEGORY } from "../action/action.type";
+import {
+  CLEAR_ART_LIST,
+  SET_ART_CATEGORY,
+  SET_LAST_ART,
+} from "../action/action.type";
 
 import { getArtListFun } from "../action/art";
 import ArtCategorySelector from "../Components/ArtCategorySelector";
 import ArtTagSelector from "../Components/ArtTagSelector";
 import DisplayArt from "../Components/DisplayArt";
 
-const Home = ({ artList, uid, getArtListFun }) => {
+const Home = ({ artList, uid, lastArt, getArtListFun }) => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleFilter = () => {
-    getArtListFun({ uid, history, tagFilter, categoryFilter });
+    dispatch({ type: CLEAR_ART_LIST });
+    dispatch({ type: SET_LAST_ART, payload: [] });
+    getArtListFun({ uid, history, tagFilter, categoryFilter, lastArt: [] });
+  };
+  const handleFetchAll = () => {
+    dispatch({ type: CLEAR_ART_LIST });
+    dispatch({ type: SET_LAST_ART, payload: [] });
+
+    getArtListFun({
+      uid,
+      history,
+      tagFilter: "",
+      categoryFilter: "",
+      lastArt: [],
+    });
   };
 
   useEffect(() => {
+    dispatch({ type: CLEAR_ART_LIST });
+    dispatch({ type: SET_LAST_ART, payload: [] });
+
     if (uid) {
-      getArtListFun({ uid, history, tagFilter: "", categoryFilter: "" });
+      getArtListFun({
+        uid,
+        history,
+        tagFilter: "",
+        categoryFilter: "",
+        lastArt: [],
+      });
     }
   }, [uid]);
 
@@ -71,14 +99,7 @@ const Home = ({ artList, uid, getArtListFun }) => {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => {
-                getArtListFun({
-                  uid,
-                  history,
-                  tagFilter: "",
-                  categoryFilter: "",
-                });
-              }}
+              onClick={() => handleFetchAll()}
             >
               Fetch All
             </button>
@@ -90,12 +111,20 @@ const Home = ({ artList, uid, getArtListFun }) => {
       {artList.map((art) => (
         <DisplayArt art={art} key={art.artId} />
       ))}
+      <button
+        onClick={() =>
+          getArtListFun({ uid, history, tagFilter, categoryFilter, lastArt })
+        }
+      >
+        More
+      </button>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   artList: state.art.artList,
+  lastArt: state.art.lastArt,
   uid: state.auth.uid,
 });
 

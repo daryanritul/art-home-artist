@@ -24,6 +24,7 @@ import {
 } from "./action/action.type";
 import { firebaseAuth } from "./firebase";
 import Archive from "./Pages/Archive";
+import Chat from "./Pages/Chat";
 
 const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
@@ -66,6 +67,9 @@ const App = ({ auth, getArtistProfile }) => {
         </Route>
         <Route exact path="/archive">
           <Archive />
+        </Route>
+        <Route exact path="/chat">
+          <Chat />
         </Route>
         <Route exact path="/artistprofile">
           <ArtistProfile />

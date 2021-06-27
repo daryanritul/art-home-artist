@@ -98,6 +98,14 @@ const DisplayArt = ({
               >
                 Edit
               </button>
+              <a
+                href={art.downloadUrl}
+                target="_blank"
+                type="button"
+                className="btn btn-primary"
+              >
+                Download
+              </a>
 
               {art.isArchive ? (
                 <button
@@ -133,54 +141,6 @@ const DisplayArt = ({
               </button>
             </div>
           )}
-        </div>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          Download
-        </button>
-      </div>
-
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Download Image
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <div className="row">
-                <a href={art.downloadUrl} download>
-                  <img src={art.downloadUrl} className="w-75" />
-                </a>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
