@@ -1,4 +1,4 @@
-import imageCompression from "browser-image-compression";
+import { readAndCompressImage } from "browser-image-resizer";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { firestore, storage } from "../firebase";
@@ -390,13 +390,15 @@ export const uploadArtImageFun =
       const imageFile = event.target.files[0];
 
       console.log("imageFile", imageFile.name);
-      const options = {
-        maxSizeMB: 0.4,
-        maxWidthOrHeight: 340,
-        useWebWorker: true,
+      const config = {
+        quality: 0.8,
+        maxWidth: 800,
+        maxHeight: 2000,
+        autoRotate: true,
+        debug: true,
       };
       // TO compress file
-      const compressedFile = await imageCompression(imageFile, options);
+      const compressedFile = await readAndCompressImage(imageFile, config);
       // To gernate Uniq file letter name for file
       const fileId = nanoid(5);
 

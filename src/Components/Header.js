@@ -1,7 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { firebaseAuth } from "../firebase";
 
 const Header = () => {
+  const handleSignOut = () => {
+    firebaseAuth
+      .signOut()
+      .then(() => {
+        toast("Sign Out", {
+          type: "success",
+        });
+      })
+      .catch((error) => {
+        console.log("Error", error);
+        toast(error.message, {
+          type: "error",
+        });
+      });
+  };
+
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark ">
       <div className="container-fluid">
@@ -36,15 +54,19 @@ const Header = () => {
                 ADD ART
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/chat">
-                Chat
-              </Link>
-            </li>
 
             <li className="nav-item">
               <Link className="nav-link" to="/signIn">
                 Sign IN
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/signIn"
+                onClick={() => handleSignOut()}
+              >
+                Sign Out
               </Link>
             </li>
           </ul>
