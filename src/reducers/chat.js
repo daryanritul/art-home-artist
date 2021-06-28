@@ -1,13 +1,14 @@
 import {
   SET_CHAT,
   SET_CHAT_OBSERVER,
+  SET_LAST_MESSAGE,
   SET_MESSAGE,
 } from "../action/action.type";
 
 const initialState = {
   chatList: [],
   message: "",
-  observer: null,
+  lastMessage: [],
 };
 
 export default (state = initialState, action) => {
@@ -22,10 +23,11 @@ export default (state = initialState, action) => {
         ...state,
         message: action.payload,
       };
-    case SET_CHAT_OBSERVER:
+
+    case SET_LAST_MESSAGE:
       return {
         ...state,
-        observer: action.payload,
+        lastMessage: action.payload,
       };
 
     default:

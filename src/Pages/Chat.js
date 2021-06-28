@@ -3,17 +3,10 @@ import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SET_CHAT, SET_MESSAGE } from "../action/action.type";
-import { getChatFun, sendMessageFun } from "../action/chat";
+import { sendMessageFun } from "../action/chat";
 import { firestore } from "../firebase";
 
-const Chat = ({
-  message,
-  chatList,
-  uid,
-  sendMessageFun,
-  getChatFun,
-  observer,
-}) => {
+const Chat = ({ message, chatList, uid, sendMessageFun }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -22,7 +15,8 @@ const Chat = ({
       .collection("chat")
       .doc(uid)
       .collection("messageList")
-      .orderBy("timeStamp")
+      .orderBy("timeStamp", "desc")
+      .limit(5)
       .onSnapshot(
         (querySnapshot) => {
           const tempDoc = querySnapshot.docs.map((doc) => {
@@ -86,9 +80,9 @@ const Chat = ({
             </button>
           </div>
         </div>
-        <div className="overflow-scroll ">
+        <div className=" d-flex flex-column-reverse overflow-scroll">
           {chatList.map((message) => (
-            <div className="bg-dark text-white m-3 w-25">
+            <div className="bg-dark text-white mt-1 w-25">
               <p>{message.message}</p>
               <p>{message.timeStamp.toDate().toLocaleTimeString()}</p>
             </div>
@@ -102,12 +96,10 @@ const Chat = ({
 const mapStateToProps = (state) => ({
   message: state.chat.message,
   chatList: state.chat.chatList,
-  observer: state.chat.observer,
   uid: state.auth.uid,
 });
 
 const mapDispatchToProps = {
-  getChatFun: (data) => getChatFun(data),
   sendMessageFun: (data) => sendMessageFun(data),
 };
 

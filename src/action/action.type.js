@@ -48,4 +48,4 @@ export const SET_ARTIST_SOCIAL_ID = "SET_ARTIST_SOCIAL_ID";
 // Chat
 export const SET_MESSAGE = "SET_MESSAGE";
 export const SET_CHAT = "SET_CHAT";
-export const SET_CHAT_OBSERVER = "SET_CHAT_OBSERVER";
+export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
