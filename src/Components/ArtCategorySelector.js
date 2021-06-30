@@ -1,6 +1,21 @@
 import React from "react";
 
 const ArtCategorySelector = ({ value = null, onChange, name }) => {
+  const category = [
+    "All",
+    "Painting",
+    "Mandala",
+    "Craft",
+    "Pop Art",
+    "Abstract Art",
+    "Illustration",
+    "Aborignal Art",
+    "Oil Painting",
+    "Sculpture Art",
+    "Sketching",
+    "Polaroids",
+    "Cartoon Art",
+  ];
   return (
     <select
       name={name}
@@ -11,10 +26,11 @@ const ArtCategorySelector = ({ value = null, onChange, name }) => {
       <option value="" disabled hidden>
         Select
       </option>
-      <option value="c++">C++</option>
-
-      <option value="Java">Java</option>
-      <option value="Python">Python</option>
+      {category.map((item, index) => (
+        <option key={index} value={item}>
+          {item}
+        </option>
+      ))}
     </select>
   );
 };
