@@ -1,0 +1,56 @@
+.art-card {
+  display: flex;
+  background: #fff;
+  transition: background 300ms;
+}
+.art-card:hover {
+  background: #f2f2ee;
+}
+.card-image img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+}
+.card-index {
+  width: 8%;
+  flex-shrink: 0;
+  text-align: center;
+  margin: auto;
+  font-size: 20px;
+  font-weight: bold;
+}
+.details-1 {
+  display: flex;
+  justify-content: space-between;
+}
+.card-details {
+  flex-grow: 1;
+  position: relative;
+  margin: 15px;
+}
+.card-details p {
+  padding: 5px;
+  margin: 0;
+}
+.card-details p span {
+  font-weight: bold;
+}
+.card-buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.card-buttons button,
+.card-buttons a {
+  width: 23%;
+}
+.card-delete {
+  flex-grow: 1;
+  margin: 15px;
+}
+.card-delete h4,
+p,
+h5,
+input {
+  padding: 3px;
+}

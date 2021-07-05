@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 
-import { useHistory, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   ADD_ART_TAG,
   DELETE_ART_TAG,
@@ -11,15 +11,15 @@ import {
   SET_ART_NAME,
   SET_ART_IMAGE_URL,
   SET_ART_DESCRIPATION,
-} from "../action/action.type";
+} from '../action/action.type';
 import {
   addArtFun,
   updateArtFun,
   uploadArtImageFun,
   deleteArtImageFun,
-} from "../action/art";
-import ArtCategorySelector from "../Components/ArtCategorySelector";
-import ArtTagSelector from "../Components/ArtTagSelector";
+} from '../action/art';
+import ArtCategorySelector from '../Components/ArtCategorySelector';
+import ArtTagSelector from '../Components/ArtTagSelector';
 
 const AddArt = ({
   uid,
@@ -46,8 +46,8 @@ const AddArt = ({
   } = addArt;
 
   const hnadleSubmit = () => {
-    if (isEdit === "edit") {
-      console.log("updateArtFun");
+    if (isEdit === 'edit') {
+      console.log('updateArtFun');
       updateArtFun({
         category,
         downloadUrl,
@@ -62,7 +62,7 @@ const AddArt = ({
         artistProfile,
       });
     } else {
-      console.log("addArtFun");
+      console.log('addArtFun');
       addArtFun({
         category,
         downloadUrl,
@@ -78,15 +78,15 @@ const AddArt = ({
   };
 
   useEffect(async () => {
-    if (isEdit !== "edit" && isEdit !== "add") {
-      history.replace("/");
+    if (isEdit !== 'edit' && isEdit !== 'add') {
+      history.replace('/');
     }
   }, [isEdit]);
 
   return (
-    <div className="container border border-2 border-success mt-2 p-2">
+    <div className="container border border-2 mt-2 p-2">
       <h4 className="text-center text-primary">
-        {isEdit === "edit" ? "EDIT ART" : "ADD ART"}
+        {isEdit === 'edit' ? 'EDIT ART' : 'ADD ART'}
       </h4>
 
       <div>
@@ -99,7 +99,7 @@ const AddArt = ({
           name="artName"
           placeholder="Enter Art Name"
           value={artName}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_NAME,
               payload: e.target.value,
@@ -116,9 +116,9 @@ const AddArt = ({
               type="file"
               accept="image/*"
               className="form-control"
-              onChange={(event) => {
+              onChange={event => {
                 uploadArtImageFun({ event, uid });
-                if (isEdit == "edit") {
+                if (isEdit == 'edit') {
                   deleteArtImageFun({ uid, downloadName });
                 }
               }}
@@ -139,7 +139,7 @@ const AddArt = ({
           name="descripation"
           placeholder="Enter descripation"
           value={description}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_DESCRIPATION,
               payload: e.target.value,
@@ -152,7 +152,7 @@ const AddArt = ({
         <ArtCategorySelector
           name="category"
           value={category}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_CATEGORY,
               payload: e.target.value,
@@ -200,7 +200,7 @@ const AddArt = ({
           </label>
           <ArtTagSelector
             name="tagSelect"
-            onChange={(e) => {
+            onChange={e => {
               dispatch({
                 type: ADD_ART_TAG,
                 payload: e.target.value,
@@ -220,17 +220,17 @@ const AddArt = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   uid: state.auth.uid,
   artistProfile: state.auth.artistProfile,
   addArt: state.addArt,
 });
 
 const mapDispatchToProps = {
-  addArtFun: (data) => addArtFun(data),
-  updateArtFun: (data) => updateArtFun(data),
-  uploadArtImageFun: (data) => uploadArtImageFun(data),
-  deleteArtImageFun: (data) => deleteArtImageFun(data),
+  addArtFun: data => addArtFun(data),
+  updateArtFun: data => updateArtFun(data),
+  uploadArtImageFun: data => uploadArtImageFun(data),
+  deleteArtImageFun: data => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddArt);

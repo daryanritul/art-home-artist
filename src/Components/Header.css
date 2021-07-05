@@ -1,0 +1,33 @@
+/* $color-1: #f2f2ee;
+$color-2: #949792;
+$color-3: #bfb195;
+$color-4: #86715c;
+$color-5: #3c363a;
+$color-6: #191919; */
+
+.navbar p {
+  margin: 0;
+  padding: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background 300ms;
+  color: #3c363a;
+}
+.navbar p:hover {
+  background: #bfb195;
+}
+
+.navbar {
+  background: #f2f2ee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.nav__items {
+  display: flex;
+  color: red;
+}
+.navbar img {
+  width: 150px;
+}
