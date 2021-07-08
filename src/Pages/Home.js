@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import './Home.css';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   CLEAR_ART_LIST,
   SET_ART_CATEGORY,
   SET_LAST_ART,
-} from "../action/action.type";
+} from '../action/action.type';
 
-import { getArtListFun } from "../action/art";
-import ArtCategorySelector from "../Components/ArtCategorySelector";
-import ArtTagSelector from "../Components/ArtTagSelector";
-import DisplayArt from "../Components/DisplayArt";
+import { getArtListFun } from '../action/art';
+import ArtCategorySelector from '../Components/ArtCategorySelector';
+import ArtTagSelector from '../Components/ArtTagSelector';
+import DisplayArt from '../Components/DisplayArt';
 
 const Home = ({ artList, uid, lastArt, getArtListFun }) => {
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [tagFilter, setTagFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [tagFilter, setTagFilter] = useState('');
+  const [artToggler, setArtToggler] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -30,8 +34,8 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
     getArtListFun({
       uid,
       history,
-      tagFilter: "",
-      categoryFilter: "",
+      tagFilter: '',
+      categoryFilter: '',
       lastArt: [],
     });
   };
@@ -44,92 +48,127 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
       getArtListFun({
         uid,
         history,
-        tagFilter: "",
-        categoryFilter: "",
+        tagFilter: '',
+        categoryFilter: '',
         lastArt: [],
       });
     }
   }, [uid]);
 
   return (
-    <div className="container border border-2 border-success mt-4">
-      <div className="m-2 p-2 border  row">
-        <div className="col-lg-4">
-          <label htmlFor="tagFilter" className="form-label">
-            Select Tag
-          </label>
-          <ArtTagSelector
-            name="tagFilter"
-            value={tagFilter}
-            onChange={(e) => {
-              setTagFilter(e.target.value);
-            }}
-          />
-        </div>
-        <div className="col-lg-4">
-          <label htmlFor="categoryFilter" className="form-label">
-            Select Category To filter
-          </label>
-          <ArtCategorySelector
-            name="categoryFilter"
-            value={categoryFilter}
-            onChange={(e) => {
-              setCategoryFilter(e.target.value);
-            }}
-          />
-        </div>
-
-        <div className="col-lg-4 ">
-          <div
-            className="btn-group btn-group-lg m-4"
-            role="group"
-            aria-label="Basic mixed styles example"
-          >
-            <button className="btn btn-success " onClick={() => handleFilter()}>
-              Filter
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                setTagFilter("");
-                setCategoryFilter("");
-              }}
-            >
-              Clear
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => handleFetchAll()}
-            >
-              Fetch All
-            </button>
+    <>
+      <div className="container border-2 border-success mt-4">
+        <div className="m-3 p-2 border  row">
+          <div className="artTitle">
+            <p className="artTitle-big">My Arts</p>
+            <p className="artTitle-small">Total : {artList.length}</p>
           </div>
         </div>
-      </div>
+        <div className="m-3 p-2 border  row">
+          {/* <div className="col-lg-4">
+            <label htmlFor="tagFilter" className="form-label">
+              Select Tag
+            </label>
+            <ArtTagSelector
+              name="tagFilter"
+              value={tagFilter}
+              onChange={e => {
+                setTagFilter(e.target.value);
+              }}
+            />
+          </div> */}
+          <div className="col-lg-4">
+            <label htmlFor="categoryFilter" className="form-label">
+              Search Arts by Name, Tags
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              name="confiumDelete"
+              placeholder="Enter Name, Tags Here"
+            />
+          </div>
+          <div className="col-lg-4">
+            <label htmlFor="categoryFilter" className="form-label">
+              Select Category To filter
+            </label>
+            <ArtCategorySelector
+              name="categoryFilter"
+              value={categoryFilter}
+              onChange={e => {
+                setCategoryFilter(e.target.value);
+              }}
+            />
+          </div>
 
-      <h1 className="text-center text-primary">List of Art</h1>
-      {artList.map((art) => (
-        <DisplayArt art={art} key={art.artId} />
-      ))}
-      <button
-        onClick={() =>
-          getArtListFun({ uid, history, tagFilter, categoryFilter, lastArt })
-        }
-      >
-        More
-      </button>
-    </div>
+          <div
+            className="col-lg-4 "
+            style={{
+              position: 'relative',
+            }}
+          >
+            <div
+              className="filter-buttons"
+              role="group"
+              aria-label="Basic mixed styles example"
+            >
+              <button
+                className="btn btn-success "
+                onClick={() => handleFilter()}
+              >
+                Filter
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setTagFilter('');
+                  setCategoryFilter('');
+                  handleFetchAll();
+                }}
+              >
+                View All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {artList.map((art, index) => (
+          <DisplayArt art={art} key={art.artId} index={index} />
+        ))}
+        <div className="more">
+          <button
+            className="btn btn-primary viewMore"
+            onClick={() =>
+              getArtListFun({
+                uid,
+                history,
+                tagFilter,
+                categoryFilter,
+                lastArt,
+              })
+            }
+          >
+            View More
+          </button>
+        </div>
+      </div>
+      <div className="addArtBtn">
+        <Link to="/art/add">
+          <button className="btn btn-primary ">ADD MORE ARTS</button>
+        </Link>
+      </div>
+    </>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   artList: state.art.artList,
   lastArt: state.art.lastArt,
   uid: state.auth.uid,
 });
 
 const mapDispatchToProps = {
-  getArtListFun: (data) => getArtListFun(data),
+  getArtListFun: data => getArtListFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
