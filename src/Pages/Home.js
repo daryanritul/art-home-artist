@@ -1,42 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import './Home.css';
-import { connect, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import {
-  CLEAR_ART_LIST,
-  SET_ART_CATEGORY,
-  SET_LAST_ART,
-} from '../action/action.type';
+import "./Home.css";
+import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { CLEAR_ART_LIST, SET_LAST_ART } from "../action/action.type";
 
-import { getArtListFun } from '../action/art';
-import ArtCategorySelector from '../Components/ArtCategorySelector';
-import ArtTagSelector from '../Components/ArtTagSelector';
-import DisplayArt from '../Components/DisplayArt';
+import { getArtListFun } from "../action/art";
+import ArtCategorySelector from "../Components/ArtCategorySelector";
+import DisplayArt from "../Components/DisplayArt";
 
 const Home = ({ artList, uid, lastArt, getArtListFun }) => {
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [tagFilter, setTagFilter] = useState('');
-  const [artToggler, setArtToggler] = useState(false);
+  const [category, setCategory] = useState("All");
+  const [search, setSearch] = useState("");
+  const [selector, setSelector] = useState({ search: "", category: "All" });
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleFilter = () => {
-    dispatch({ type: CLEAR_ART_LIST });
-    dispatch({ type: SET_LAST_ART, payload: [] });
-    getArtListFun({ uid, history, tagFilter, categoryFilter, lastArt: [] });
-  };
-  const handleFetchAll = () => {
-    dispatch({ type: CLEAR_ART_LIST });
-    dispatch({ type: SET_LAST_ART, payload: [] });
-
-    getArtListFun({
+  const handleLoadMore = async () => {
+    await getArtListFun({
       uid,
       history,
-      tagFilter: '',
-      categoryFilter: '',
-      lastArt: [],
+      search: selector.search,
+      category: selector.category,
+      lastArt,
     });
   };
 
@@ -48,16 +35,16 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
       getArtListFun({
         uid,
         history,
-        tagFilter: '',
-        categoryFilter: '',
+        search: selector.search,
+        category: selector.category,
         lastArt: [],
       });
     }
-  }, [uid]);
+  }, [uid, selector]);
 
   return (
     <>
-      <div className="container border-2 border-success mt-4">
+      <div className="container  mt-4">
         <div className="m-3 p-2 border  row">
           <div className="artTitle">
             <p className="artTitle-big">My Arts</p>
@@ -65,18 +52,6 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
           </div>
         </div>
         <div className="m-3 p-2 border  row">
-          {/* <div className="col-lg-4">
-            <label htmlFor="tagFilter" className="form-label">
-              Select Tag
-            </label>
-            <ArtTagSelector
-              name="tagFilter"
-              value={tagFilter}
-              onChange={e => {
-                setTagFilter(e.target.value);
-              }}
-            />
-          </div> */}
           <div className="col-lg-4">
             <label htmlFor="categoryFilter" className="form-label">
               Search Arts by Name, Tags
@@ -86,6 +61,8 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
               type="text"
               name="confiumDelete"
               placeholder="Enter Name, Tags Here"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="col-lg-4">
@@ -94,9 +71,9 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
             </label>
             <ArtCategorySelector
               name="categoryFilter"
-              value={categoryFilter}
-              onChange={e => {
-                setCategoryFilter(e.target.value);
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
               }}
             />
           </div>
@@ -104,7 +81,7 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
           <div
             className="col-lg-4 "
             style={{
-              position: 'relative',
+              position: "relative",
             }}
           >
             <div
@@ -113,17 +90,23 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
               aria-label="Basic mixed styles example"
             >
               <button
-                className="btn btn-success "
-                onClick={() => handleFilter()}
+                className="btn btn-success m-1"
+                onClick={() =>
+                  setSelector({
+                    ...selector,
+                    search,
+                    category,
+                  })
+                }
               >
                 Filter
               </button>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary m-1"
                 onClick={() => {
-                  setTagFilter('');
-                  setCategoryFilter('');
-                  handleFetchAll();
+                  setCategory("All");
+                  setSearch("");
+                  setSelector({ search: "", category: "All" });
                 }}
               >
                 View All
@@ -138,15 +121,7 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
         <div className="more">
           <button
             className="btn btn-primary viewMore"
-            onClick={() =>
-              getArtListFun({
-                uid,
-                history,
-                tagFilter,
-                categoryFilter,
-                lastArt,
-              })
-            }
+            onClick={() => handleLoadMore()}
           >
             View More
           </button>
@@ -161,14 +136,14 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   artList: state.art.artList,
   lastArt: state.art.lastArt,
   uid: state.auth.uid,
 });
 
 const mapDispatchToProps = {
-  getArtListFun: data => getArtListFun(data),
+  getArtListFun: (data) => getArtListFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

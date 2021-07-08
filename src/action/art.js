@@ -58,7 +58,6 @@ export const addArtFun =
         history.push("/");
       })
       .catch((error) => {
-        console.log(error);
         toast(error.message, {
           type: "error",
         });
@@ -108,7 +107,6 @@ export const updateArtFun =
             history.push("/");
           })
           .catch((error) => {
-            console.log(error);
             toast(error.message, {
               type: "error",
             });
@@ -143,7 +141,6 @@ export const deleteArtFun =
         });
       })
       .catch((error) => {
-        console.log(error);
         toast(error.message, {
           type: "error",
         });
@@ -151,7 +148,7 @@ export const deleteArtFun =
   };
 
 export const getArtListFun =
-  ({ uid, history, tagFilter, categoryFilter, lastArt }) =>
+  ({ uid, history, search, category, lastArt }) =>
   async (dispatch) => {
     try {
       if (uid) {
@@ -160,7 +157,7 @@ export const getArtListFun =
           .where("uid", "==", uid)
           .where("isArchive", "==", false);
 
-        if (uid && tagFilter === "" && categoryFilter === "") {
+        if (uid && search === "" && category === "All") {
           const snapshot = await artList
             .orderBy("timeStamp", "desc")
             .startAfter(lastArt)
@@ -187,9 +184,9 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && tagFilter === "" && categoryFilter !== "") {
+        } else if (uid && search === "" && category !== "All") {
           const snapshot = await artList
-            .where("category", "==", categoryFilter)
+            .where("category", "==", category)
             .orderBy("timeStamp", "desc")
             .startAfter(lastArt)
             .limit(4)
@@ -215,10 +212,10 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && tagFilter !== "" && categoryFilter !== "") {
+        } else if (uid && search !== "" && category !== "All") {
           const snapshot = await artList
-            .where("category", "==", categoryFilter)
-            .where("tag", "array-contains", tagFilter)
+            .where("category", "==", category)
+            .where("arrayForSearch", "array-contains", search)
             .orderBy("timeStamp", "desc")
             .startAfter(lastArt)
             .limit(4)
@@ -244,9 +241,9 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && tagFilter !== "" && categoryFilter === "") {
+        } else if (uid && search !== "" && category === "All") {
           const snapshot = await artList
-            .where("tag", "array-contains", tagFilter)
+            .where("arrayForSearch", "array-contains", search)
             .orderBy("timeStamp", "desc")
             .startAfter(lastArt)
             .limit(4)
@@ -286,7 +283,6 @@ export const getArtListFun =
         history.push("/");
       }
     } catch (error) {
-      console.log("error", error);
       toast(error.message, {
         type: "error",
       });
@@ -336,7 +332,6 @@ export const getArchiveArtFun =
         history.push("/");
       }
     } catch (error) {
-      console.log("error", error);
       toast(error.message, {
         type: "error",
       });
@@ -371,7 +366,6 @@ export const toggleArtArchiveFun =
             });
           })
           .catch((error) => {
-            console.log(error);
             toast(error.message, {
               type: "error",
             });
@@ -394,7 +388,6 @@ export const uploadArtImageFun =
     try {
       const imageFile = event.target.files[0];
 
-      console.log("imageFile", imageFile.name);
       const config = {
         quality: 0.8,
         maxWidth: 800,
@@ -437,7 +430,6 @@ export const uploadArtImageFun =
           uploadTaskCompressedFile.snapshot.ref
             .getDownloadURL()
             .then((downloadURL) => {
-              console.log("downloadURL COM", downloadURL);
               dispatch({
                 type: SET_ART_IMAGE_URL,
                 payload: downloadURL,
@@ -457,7 +449,6 @@ export const uploadArtImageFun =
         (snapshot) => {
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Image Upload  is " + progress + "% done");
           dispatch({
             type: SET_ART_DOWNLOAD_UPLOAD_STATUS,
             payload: "Image Upload  is " + progress + "% done",
@@ -478,7 +469,6 @@ export const uploadArtImageFun =
         }
       );
     } catch (error) {
-      console.log(error);
       toast(error.message, {
         type: "error",
       });
@@ -488,7 +478,6 @@ export const uploadArtImageFun =
 export const deleteArtImageFun =
   ({ uid, downloadName }) =>
   async (dispatch) => {
-    console.log("downloadName", downloadName);
     const storageRef = storage.ref();
     const compImageref = storageRef.child(uid + "/COMP" + downloadName);
 

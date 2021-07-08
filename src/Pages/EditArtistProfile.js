@@ -1,7 +1,7 @@
-import React from 'react';
-import './ArtistProfile.css';
-import { connect, useDispatch } from 'react-redux';
-import { updateArtistProfileFun, uploadProfileImageFun } from '../action/auth';
+import React from "react";
+import "./ArtistProfile.css";
+import { connect, useDispatch } from "react-redux";
+import { updateArtistProfileFun, uploadProfileImageFun } from "../action/auth";
 
 import {
   ADD_ARTIST_SOCIAL,
@@ -13,8 +13,8 @@ import {
   SET_ARTIST_SOCIAL_ID,
   SET_ARTIST_SOCIAL_LINK,
   SET_ARTIST_SOCIAL_PROVIDER_NAME,
-} from '../action/action.type';
-import { useHistory } from 'react-router-dom';
+} from "../action/action.type";
+import { useHistory } from "react-router-dom";
 
 const EditArtistProfile = ({
   updateArtistProfile,
@@ -27,7 +27,6 @@ const EditArtistProfile = ({
   const hnadleSubmit = async () => {
     updateArtistProfileFun({ updateArtistProfile, uid, history });
   };
-  console.log('updateArtistProfile', updateArtistProfile);
   return (
     <div className="container border border-warning border-2 mt-2  mb-5 p-3">
       <div>
@@ -40,7 +39,7 @@ const EditArtistProfile = ({
           name="name"
           placeholder="Enter Name"
           value={updateArtistProfile.name}
-          onChange={e => {
+          onChange={(e) => {
             dispatch({
               type: SET_ARTIST_NAME,
               payload: e.target.value,
@@ -57,12 +56,16 @@ const EditArtistProfile = ({
               type="file"
               accept="image/*"
               className="form-control"
-              onChange={event => uploadProfileImageFun({ event, uid })}
+              onChange={(event) => uploadProfileImageFun({ event, uid })}
             />
             <p>{updateArtistProfile.profilePicUploadStatus}</p>
           </div>
           <div className="col-md-4">
-            <img src={updateArtistProfile.profilePicUrl} className="w-50" />
+            <img
+              src={updateArtistProfile.profilePicUrl}
+              className="w-50"
+              alt="Not Found"
+            />
           </div>
         </div>
 
@@ -75,7 +78,7 @@ const EditArtistProfile = ({
           name="dateOfBirth"
           placeholder="Enter Date of Birth"
           value={updateArtistProfile.dateOfBirth}
-          onChange={e => {
+          onChange={(e) => {
             dispatch({
               type: SET_ARTIST_DATE_OF_BIRTH,
               payload: e.target.value,
@@ -91,7 +94,7 @@ const EditArtistProfile = ({
           name="dateStarted"
           placeholder="Enter Date Started"
           value={updateArtistProfile.dateStarted}
-          onChange={e => {
+          onChange={(e) => {
             dispatch({
               type: SET_ARTIST_DATE_STARTED,
               payload: e.target.value,
@@ -107,7 +110,7 @@ const EditArtistProfile = ({
           name="bio"
           placeholder="Enter BIo"
           value={updateArtistProfile.bio}
-          onChange={e => {
+          onChange={(e) => {
             dispatch({
               type: SET_ARTIST_BIO,
               payload: e.target.value,
@@ -163,7 +166,7 @@ const EditArtistProfile = ({
               name="socialProviderName"
               placeholder="Enter Social Provider Name"
               value={updateArtistProfile.socialProviderName}
-              onChange={e => {
+              onChange={(e) => {
                 dispatch({
                   type: SET_ARTIST_SOCIAL_PROVIDER_NAME,
                   payload: e.target.value,
@@ -181,7 +184,7 @@ const EditArtistProfile = ({
               name="socialID"
               placeholder="Enter Social ID"
               value={updateArtistProfile.socialID}
-              onChange={e => {
+              onChange={(e) => {
                 dispatch({
                   type: SET_ARTIST_SOCIAL_ID,
                   payload: e.target.value,
@@ -199,7 +202,7 @@ const EditArtistProfile = ({
               name="socialLink"
               placeholder="Enter Social Link"
               value={updateArtistProfile.socialLink}
-              onChange={e => {
+              onChange={(e) => {
                 dispatch({
                   type: SET_ARTIST_SOCIAL_LINK,
                   payload: e.target.value,
@@ -228,14 +231,14 @@ const EditArtistProfile = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   uid: state.auth.uid,
   updateArtistProfile: state.updateArtistProfile,
 });
 
 const mapDispatchToProps = {
-  updateArtistProfileFun: data => updateArtistProfileFun(data),
-  uploadProfileImageFun: data => uploadProfileImageFun(data),
+  updateArtistProfileFun: (data) => updateArtistProfileFun(data),
+  uploadProfileImageFun: (data) => uploadProfileImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditArtistProfile);

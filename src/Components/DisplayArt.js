@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import './DisplayArt.css';
-import { connect, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { SET_STATE_TO_UPDATE_ART } from '../action/action.type';
+import React, { useState } from "react";
+import "./DisplayArt.css";
+import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { SET_STATE_TO_UPDATE_ART } from "../action/action.type";
 import {
   deleteArtFun,
   toggleArtArchiveFun,
   deleteArtImageFun,
-} from '../action/art';
+} from "../action/art";
 
 const DisplayArt = ({
   art,
@@ -20,16 +20,15 @@ const DisplayArt = ({
   const dispatch = useDispatch();
   const history = useHistory();
   const [showConfirmDeleteInput, setShowConfirmDeleteInput] = useState(false);
-  const [inputForConfirmDelete, setInputForConfirmDelete] = useState('');
-  const [detailToggle, setDetailToggle] = useState(false);
+  const [inputForConfirmDelete, setInputForConfirmDelete] = useState("");
   const handleDelete = () => {
-    if (inputForConfirmDelete === 'delete') {
+    if (inputForConfirmDelete === "delete") {
       deleteArtFun({ uid, artId: art.artId, archiveValue: !art.isArchive });
-      setInputForConfirmDelete('');
+      setInputForConfirmDelete("");
       setShowConfirmDeleteInput(false);
       deleteArtImageFun({ uid, downloadName: art.downloadName });
     } else {
-      setInputForConfirmDelete('');
+      setInputForConfirmDelete("");
     }
   };
 
@@ -142,7 +141,7 @@ const DisplayArt = ({
       <div className="art-card">
         <div className="card-index">{index + 1}</div>
         <div className="card-image">
-          <img src={art.imageUrl} />
+          <img src={art.imageUrl} alt="not found" />
         </div>
         {showConfirmDeleteInput ? (
           <div className="card-delete">
@@ -157,7 +156,7 @@ const DisplayArt = ({
               name="confiumDelete"
               placeholder="Enter delete"
               value={inputForConfirmDelete}
-              onChange={e => setInputForConfirmDelete(e.target.value)}
+              onChange={(e) => setInputForConfirmDelete(e.target.value)}
             />
             <p>
               After confirm delete your image data will be deleted from out
@@ -192,7 +191,7 @@ const DisplayArt = ({
             <p>
               <span>Tags : </span>
               {art.tag.map((tag, index) => (
-                <p style={{ display: 'inline' }} key={index}>
+                <p style={{ display: "inline" }} key={index}>
                   {tag}
                 </p>
               ))}
@@ -208,7 +207,7 @@ const DisplayArt = ({
                     type: SET_STATE_TO_UPDATE_ART,
                     payload: { ...art },
                   });
-                  history.push('art/edit');
+                  history.push("art/edit");
                 }}
               >
                 Edit
@@ -217,6 +216,7 @@ const DisplayArt = ({
                 href={art.downloadUrl}
                 target="_blank"
                 type="button"
+                rel="noreferrer"
                 className="btn btn-primary"
               >
                 Download
@@ -260,13 +260,13 @@ const DisplayArt = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   uid: state.auth.uid,
 });
 const mapDispatchToProps = {
-  deleteArtFun: data => deleteArtFun(data),
-  toggleArtArchiveFun: data => toggleArtArchiveFun(data),
-  deleteArtImageFun: data => deleteArtImageFun(data),
+  deleteArtFun: (data) => deleteArtFun(data),
+  toggleArtArchiveFun: (data) => toggleArtArchiveFun(data),
+  deleteArtImageFun: (data) => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayArt);

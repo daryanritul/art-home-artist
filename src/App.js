@@ -1,52 +1,59 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
-import Header from './Components/Header';
+import Header from "./Components/Header";
 // Pages
-import Home from './Pages/Home';
-import SignIn from './Pages/SignIn';
-import EmailVerifactionPage from './Pages/EmailVerifactionPage';
-import EditArtistProfile from './Pages/EditArtistProfile';
-import ArtistProfile from './Pages/ArtistProfile';
-import AddArt from './Pages/AddArt';
+import Home from "./Pages/Home";
+import SignIn from "./Pages/SignIn";
+import EmailVerifactionPage from "./Pages/EmailVerifactionPage";
+import EditArtistProfile from "./Pages/EditArtistProfile";
+import ArtistProfile from "./Pages/ArtistProfile";
+import AddArt from "./Pages/AddArt";
 
-import { getArtistProfile } from './action/auth';
+import { getArtistProfile } from "./action/auth";
 
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, connect } from "react-redux";
 import {
   SET_ARTIST_EMAIL,
-  SET_ARTIST_PROFILE,
   SET_ARTIST_UID,
   SET_ISAUTHENTICATED,
   SET_IS_EMAIL_VERIFIED,
-} from './action/action.type';
-import { firebaseAuth } from './firebase';
-import Archive from './Pages/Archive';
+} from "./action/action.type";
+import { firebaseAuth } from "./firebase";
+import Archive from "./Pages/Archive";
 
 const App = ({ auth, getArtistProfile }) => {
   const dispatch = useDispatch();
+  const { isAuthenticated, isEmailVerified } = auth;
 
-  const onAuthStateChanged = async user => {
+  const onAuthStateChanged = async (user) => {
     if (user) {
       if (!user.emailVerified) {
         user
           .sendEmailVerification()
           .then(function () {
-            console.log('Email send');
+            console.log("Email send");
+            toast("Email send to main id for varifaction", {
+              type: "success",
+            });
           })
           .catch(function (error) {
-            console.log('error', error);
+            console.log("error", error);
           });
       } else {
         dispatch({ type: SET_IS_EMAIL_VERIFIED, payload: true });
-        dispatch({ type: SET_ISAUTHENTICATED, payload: true });
-        dispatch({ type: SET_ARTIST_EMAIL, payload: user.email });
-        dispatch({ type: SET_ARTIST_UID, payload: user.uid });
       }
-
+      dispatch({ type: SET_ISAUTHENTICATED, payload: true });
+      dispatch({ type: SET_ARTIST_EMAIL, payload: user.email });
+      dispatch({ type: SET_ARTIST_UID, payload: user.uid });
       getArtistProfile({ uid: user.uid });
     }
   };
@@ -56,6 +63,10 @@ const App = ({ auth, getArtistProfile }) => {
     return susbcriber;
   }, []);
 
+  if (isAuthenticated && !isEmailVerified) {
+    return <EmailVerifactionPage />;
+  }
+
   return (
     <Router>
       <Header />
@@ -63,38 +74,35 @@ const App = ({ auth, getArtistProfile }) => {
 
       <Switch>
         <Route exact path="/">
-          <Home />
+          {isAuthenticated ? <Home /> : <Redirect to="/signIn" />}
         </Route>
         <Route exact path="/archive">
-          <Archive />
+          {isAuthenticated ? <Archive /> : <Redirect to="/signIn" />}
         </Route>
 
         <Route exact path="/artistprofile">
-          <ArtistProfile />
+          {isAuthenticated ? <ArtistProfile /> : <Redirect to="/signIn" />}
         </Route>
         <Route exact path="/editartistprofile">
-          <EditArtistProfile />
+          {isAuthenticated ? <EditArtistProfile /> : <Redirect to="/signIn" />}
         </Route>
         <Route exact path="/art/:isEdit">
-          <AddArt />
+          {isAuthenticated ? <AddArt /> : <Redirect to="/signIn" />}
         </Route>
         <Route exact path="/signin">
-          <SignIn />
-        </Route>
-        <Route exact path="/emailverifaction">
-          <EmailVerifactionPage />
+          {isAuthenticated ? <Redirect to="/" /> : <SignIn />}
         </Route>
       </Switch>
     </Router>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
 const mapDispatchToProps = {
-  getArtistProfile: data => getArtistProfile(data),
+  getArtistProfile: (data) => getArtistProfile(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

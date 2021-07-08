@@ -47,7 +47,6 @@ export const updateArtistProfileFun =
         history.push("/artistprofile");
       })
       .catch((error) => {
-        console.log(error);
         toast(error.message, {
           type: "error",
         });
@@ -97,7 +96,6 @@ export const uploadProfileImageFun =
         }
       );
     } catch (error) {
-      console.log(error);
       toast(error.message, {
         type: "error",
       });
@@ -105,7 +103,6 @@ export const uploadProfileImageFun =
   };
 
 export const signIn = (data) => async (dispatch) => {
-  console.log("data", data);
   const { email, password } = data;
 
   firebaseAuth
@@ -116,7 +113,6 @@ export const signIn = (data) => async (dispatch) => {
       });
     })
     .catch((error) => {
-      console.log(error);
       toast(error.message, {
         type: "error",
       });
