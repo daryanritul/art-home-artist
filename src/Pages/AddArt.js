@@ -85,10 +85,11 @@ const AddArt = ({
 
   return (
     <div className="container border border-2 mt-2 p-2">
-      <h4 className="text-center text-primary">
-        {isEdit === 'edit' ? 'EDIT ART' : 'ADD ART'}
-      </h4>
-
+      <div className="artTitle mb-3">
+        <p className="artTitle-big">
+          {isEdit === 'edit' ? 'EDIT ART' : 'ADD NEW ART'}
+        </p>
+      </div>
       <div>
         <label htmlFor="artName" className="form-label">
           Art Name
@@ -210,7 +211,7 @@ const AddArt = ({
         </div>
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary submitBtn"
           onClick={() => hnadleSubmit()}
         >
           Submit

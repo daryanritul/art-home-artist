@@ -116,7 +116,7 @@ const EditArtistProfile = ({
         />
 
         <div>
-          <h5>Artist Socila List</h5>
+          <h5>Social Accounts</h5>
           <table className="table">
             <thead>
               <tr>

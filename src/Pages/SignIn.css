@@ -1,0 +1,10 @@
+.signin-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+.signin-container {
+  width: 50vw;
+  background: #f2f2ee;
+}

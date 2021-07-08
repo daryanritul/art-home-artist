@@ -15,7 +15,7 @@ const Archive = ({ archiveArtList, uid, getArchiveArtFun }) => {
   return (
     <div className="container border mt-3 p-2">
       <div className="artTitle">
-        <p className="artTitle-big">My Arts</p>
+        <p className="artTitle-big">Archive Arts</p>
         <p className="artTitle-small">Total : {archiveArtList.length}</p>
       </div>
       {archiveArtList.map((art, index) => (
