@@ -29,6 +29,7 @@ export const addArtFun =
     artistProfile,
   }) =>
   async (dispatch) => {
+    const arrayForSearch = tag.concat([artName, artistProfile.name]);
     firestore
       .collection("art")
       .doc()
@@ -39,6 +40,7 @@ export const addArtFun =
         description,
         artName,
         imageUrl,
+        arrayForSearch,
         timeStamp: firebase.firestore.Timestamp.now(),
         tag,
         isArchive: false,
@@ -78,6 +80,8 @@ export const updateArtFun =
   async (dispatch) => {
     try {
       if (artId) {
+        const arrayForSearch = tag.concat([artName, artistProfile.name]);
+
         await firestore
           .collection("art")
           .doc(artId)
@@ -87,6 +91,7 @@ export const updateArtFun =
             description,
             artName,
             imageUrl,
+            arrayForSearch,
             tag,
             timeStamp: firebase.firestore.Timestamp.now(),
             artistname: artistProfile.name,
