@@ -1,8 +1,8 @@
-import { readAndCompressImage } from "browser-image-resizer";
-import { nanoid } from "nanoid";
-import { toast } from "react-toastify";
-import { firestore, storage } from "../firebase";
-import firebase from "firebase/app";
+import { readAndCompressImage } from 'browser-image-resizer';
+import { nanoid } from 'nanoid';
+import { toast } from 'react-toastify';
+import { firestore, storage } from '../firebase';
+import firebase from 'firebase/app';
 
 import {
   CLEAR_ADD_ART_STATE,
@@ -14,7 +14,8 @@ import {
   SET_ART_DOWNLOAD_UPLOAD_STATUS,
   SET_ART_DOWNLOAD_NAME,
   SET_LAST_ART,
-} from "./action.type";
+  SET_ARTIST_TOTAL_ART,
+} from './action.type';
 
 export const addArtFun =
   ({
@@ -31,7 +32,7 @@ export const addArtFun =
   async (dispatch) => {
     const arrayForSearch = tag.concat([artName, artistProfile.name]);
     firestore
-      .collection("art")
+      .collection('art')
       .doc()
       .set({
         uid,
@@ -49,17 +50,28 @@ export const addArtFun =
         artistdateStarted: artistProfile.dateStarted,
       })
       .then(() => {
-        toast("Art Added", {
-          type: "success",
+        toast('Art Added', {
+          type: 'success',
         });
+
+        firestore
+          .collection('artist')
+          .doc(uid)
+          .update({ totalArt: artistProfile.totalArt + 1 })
+          .then(() =>
+            dispatch({
+              type: SET_ARTIST_TOTAL_ART,
+              payload: artistProfile.totalArt + 1,
+            })
+          );
         dispatch({
           type: CLEAR_ADD_ART_STATE,
         });
-        history.push("/");
+        history.push('/');
       })
       .catch((error) => {
         toast(error.message, {
-          type: "error",
+          type: 'error',
         });
       });
   };
@@ -82,7 +94,7 @@ export const updateArtFun =
         const arrayForSearch = tag.concat([artName, artistProfile.name]);
 
         await firestore
-          .collection("art")
+          .collection('art')
           .doc(artId)
           .update({
             category,
@@ -98,51 +110,62 @@ export const updateArtFun =
             artistdateStarted: artistProfile.dateStarted,
           })
           .then(() => {
-            toast("Art Added", {
-              type: "success",
+            toast('Art Added', {
+              type: 'success',
             });
             dispatch({
               type: CLEAR_ADD_ART_STATE,
             });
-            history.push("/");
+            history.push('/');
           })
           .catch((error) => {
             toast(error.message, {
-              type: "error",
+              type: 'error',
             });
           });
       } else {
-        toast("We Dont Recive Art id or User ID .... Please Try agnain", {
-          type: "error",
+        toast('We Dont Recive Art id or User ID .... Please Try agnain', {
+          type: 'error',
         });
-        history.push("/");
+        history.push('/');
       }
     } catch (error) {
       toast(error, {
-        type: "error",
+        type: 'error',
       });
     }
   };
 
 export const deleteArtFun =
-  ({ artId, archiveValue }) =>
+  ({ artId, uid, archiveValue, totalArt }) =>
   async (dispatch) => {
     await firestore
-      .collection("art")
+      .collection('art')
       .doc(artId)
       .delete()
       .then(() => {
-        toast("Art Delete", {
-          type: "success",
+        toast('Art Delete', {
+          type: 'success',
         });
         dispatch({
           type: REMOVE_ART_FROM_ART,
           payload: { artId, archiveValue },
         });
+
+        firestore
+          .collection('artist')
+          .doc(uid)
+          .update({ totalArt: totalArt - 1 })
+          .then(() =>
+            dispatch({
+              type: SET_ARTIST_TOTAL_ART,
+              payload: totalArt - 1,
+            })
+          );
       })
       .catch((error) => {
         toast(error.message, {
-          type: "error",
+          type: 'error',
         });
       });
   };
@@ -153,20 +176,20 @@ export const getArtListFun =
     try {
       if (uid) {
         const artList = firestore
-          .collection("art")
-          .where("uid", "==", uid)
-          .where("isArchive", "==", false);
+          .collection('art')
+          .where('uid', '==', uid)
+          .where('isArchive', '==', false);
 
-        if (uid && search === "" && category === "All") {
+        if (uid && search === '' && category === 'All') {
           const snapshot = await artList
-            .orderBy("timeStamp", "desc")
+            .orderBy('timeStamp', 'desc')
             .startAfter(lastArt)
             .limit(4)
             .get();
 
           if (snapshot.empty) {
-            toast.warn("🦄 No Post Found!", {
-              position: "top-right",
+            toast.warn('🦄 No Post Found!', {
+              position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -184,17 +207,17 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && search === "" && category !== "All") {
+        } else if (uid && search === '' && category !== 'All') {
           const snapshot = await artList
-            .where("category", "==", category)
-            .orderBy("timeStamp", "desc")
+            .where('category', '==', category)
+            .orderBy('timeStamp', 'desc')
             .startAfter(lastArt)
             .limit(4)
             .get();
 
           if (snapshot.empty) {
-            toast.warn("🦄 No Post Found!", {
-              position: "top-right",
+            toast.warn('🦄 No Post Found!', {
+              position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -212,18 +235,18 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && search !== "" && category !== "All") {
+        } else if (uid && search !== '' && category !== 'All') {
           const snapshot = await artList
-            .where("category", "==", category)
-            .where("arrayForSearch", "array-contains", search)
-            .orderBy("timeStamp", "desc")
+            .where('category', '==', category)
+            .where('arrayForSearch', 'array-contains', search)
+            .orderBy('timeStamp', 'desc')
             .startAfter(lastArt)
             .limit(4)
             .get();
 
           if (snapshot.empty) {
-            toast.warn("🦄 No Post Found!", {
-              position: "top-right",
+            toast.warn('🦄 No Post Found!', {
+              position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -241,17 +264,17 @@ export const getArtListFun =
             });
             dispatch({ type: SET_ART_LIST, payload: tempDoc });
           }
-        } else if (uid && search !== "" && category === "All") {
+        } else if (uid && search !== '' && category === 'All') {
           const snapshot = await artList
-            .where("arrayForSearch", "array-contains", search)
-            .orderBy("timeStamp", "desc")
+            .where('arrayForSearch', 'array-contains', search)
+            .orderBy('timeStamp', 'desc')
             .startAfter(lastArt)
             .limit(4)
             .get();
 
           if (snapshot.empty) {
-            toast.warn("🦄 No Post Found!", {
-              position: "top-right",
+            toast.warn('🦄 No Post Found!', {
+              position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -271,8 +294,8 @@ export const getArtListFun =
           }
         }
       } else {
-        toast.warn("🦄 No Post Found!", {
-          position: "top-right",
+        toast.warn('🦄 No Post Found!', {
+          position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -280,11 +303,11 @@ export const getArtListFun =
           draggable: true,
           progress: undefined,
         });
-        history.push("/");
+        history.push('/');
       }
     } catch (error) {
       toast(error.message, {
-        type: "error",
+        type: 'error',
       });
     }
   };
@@ -295,10 +318,10 @@ export const getArchiveArtFun =
     try {
       if (uid) {
         const artList = firestore
-          .collection("art")
-          .where("uid", "==", uid)
-          .where("isArchive", "==", true)
-          .orderBy("timeStamp", "desc");
+          .collection('art')
+          .where('uid', '==', uid)
+          .where('isArchive', '==', true)
+          .orderBy('timeStamp', 'desc');
 
         const snapshot = await artList.get();
 
@@ -309,8 +332,8 @@ export const getArchiveArtFun =
         dispatch({ type: SET_ARCHIVE_ART_LIST, payload: tempDoc });
 
         if (snapshot.empty) {
-          toast.warn("🦄 No ART Found!", {
-            position: "top-right",
+          toast.warn('🦄 No ART Found!', {
+            position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -320,8 +343,8 @@ export const getArchiveArtFun =
           });
         }
       } else {
-        toast.warn("🦄 Some Thing Went Wrong!", {
-          position: "top-right",
+        toast.warn('🦄 Some Thing Went Wrong!', {
+          position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -329,11 +352,11 @@ export const getArchiveArtFun =
           draggable: true,
           progress: undefined,
         });
-        history.push("/");
+        history.push('/');
       }
     } catch (error) {
       toast(error.message, {
-        type: "error",
+        type: 'error',
       });
     }
   };
@@ -344,19 +367,19 @@ export const toggleArtArchiveFun =
     try {
       if (artId) {
         await firestore
-          .collection("art")
+          .collection('art')
           .doc(artId)
           .update({
             isArchive: archiveValue,
           })
           .then(() => {
             if (archiveValue) {
-              toast("Art Moved to Archive", {
-                type: "success",
+              toast('Art Moved to Archive', {
+                type: 'success',
               });
             } else {
-              toast("Art Moved to Public", {
-                type: "success",
+              toast('Art Moved to Public', {
+                type: 'success',
               });
             }
 
@@ -367,17 +390,17 @@ export const toggleArtArchiveFun =
           })
           .catch((error) => {
             toast(error.message, {
-              type: "error",
+              type: 'error',
             });
           });
       } else {
-        toast("We Dont Recive Art id .... Please Try agnain", {
-          type: "error",
+        toast('We Dont Recive Art id .... Please Try agnain', {
+          type: 'error',
         });
       }
     } catch (error) {
       toast(error, {
-        type: "error",
+        type: 'error',
       });
     }
   };
@@ -408,22 +431,22 @@ export const uploadArtImageFun =
       // Gernating referance to upload compress image
 
       var storageRefCompressedFile = storage.ref(
-        uid + "/COMP" + fileId + imageFile.name
+        uid + '/COMP' + fileId + imageFile.name
       );
       // Upload task start
       const uploadTaskCompressedFile =
         storageRefCompressedFile.put(compressedFile);
       // track task
       uploadTaskCompressedFile.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Art Image Upload  is " + progress + "% done");
+          console.log('Art Image Upload  is ' + progress + '% done');
         },
         (error) => {
           toast(error.message, {
-            type: "error",
+            type: 'error',
           });
         },
         () => {
@@ -439,24 +462,24 @@ export const uploadArtImageFun =
       );
 
       // Referance to upload full size image
-      var storageRef = storage.ref(uid + "/" + fileId + imageFile.name);
+      var storageRef = storage.ref(uid + '/' + fileId + imageFile.name);
       // Upload task start
 
       const uploadTask = storageRef.put(imageFile);
       // Track task
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           dispatch({
             type: SET_ART_DOWNLOAD_UPLOAD_STATUS,
-            payload: "Image Upload  is " + progress + "% done",
+            payload: 'Image Upload  is ' + progress + '% done',
           });
         },
         (error) => {
           toast(error.message, {
-            type: "error",
+            type: 'error',
           });
         },
         () => {
@@ -470,7 +493,7 @@ export const uploadArtImageFun =
       );
     } catch (error) {
       toast(error.message, {
-        type: "error",
+        type: 'error',
       });
     }
   };
@@ -479,26 +502,26 @@ export const deleteArtImageFun =
   ({ uid, downloadName }) =>
   async (dispatch) => {
     const storageRef = storage.ref();
-    const compImageref = storageRef.child(uid + "/COMP" + downloadName);
+    const compImageref = storageRef.child(uid + '/COMP' + downloadName);
 
     // Delete the file
     compImageref
       .delete()
       .then(() => {
-        console.log("File delted");
+        console.log('File delted');
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
-    const imageref = storageRef.child(uid + "/" + downloadName);
+    const imageref = storageRef.child(uid + '/' + downloadName);
 
     // Delete the file
     imageref
       .delete()
       .then(() => {
-        console.log("File delted");
+        console.log('File delted');
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
   };

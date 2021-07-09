@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
 
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from 'react-router-dom';
 import {
   ADD_ART_TAG,
   DELETE_ART_TAG,
   SET_ART_CATEGORY,
   SET_ART_NAME,
   SET_ART_DESCRIPATION,
-} from "../action/action.type";
+} from '../action/action.type';
 import {
   addArtFun,
   updateArtFun,
   uploadArtImageFun,
   deleteArtImageFun,
-} from "../action/art";
-import ArtCategorySelector from "../Components/ArtCategorySelector";
-import ArtTagSelector from "../Components/ArtTagSelector";
+} from '../action/art';
+import ArtCategorySelector from '../Components/ArtCategorySelector';
 
 const AddArt = ({
   uid,
@@ -27,7 +26,7 @@ const AddArt = ({
   uploadArtImageFun,
   deleteArtImageFun,
 }) => {
-  const [tagInput, setTagInput] = useState("");
+  const [tagInput, setTagInput] = useState('');
 
   const { isEdit } = useParams();
   const history = useHistory();
@@ -45,7 +44,7 @@ const AddArt = ({
   } = addArt;
 
   const hnadleSubmit = () => {
-    if (isEdit === "edit") {
+    if (isEdit === 'edit') {
       updateArtFun({
         category,
         downloadUrl,
@@ -75,8 +74,8 @@ const AddArt = ({
   };
 
   useEffect(() => {
-    if (isEdit !== "edit" && isEdit !== "add") {
-      history.replace("/");
+    if (isEdit !== 'edit' && isEdit !== 'add') {
+      history.replace('/');
     }
   }, [isEdit]);
 
@@ -84,7 +83,7 @@ const AddArt = ({
     <div className="container border border-2 mt-2 p-2">
       <div className="artTitle mb-3">
         <p className="artTitle-big">
-          {isEdit === "edit" ? "EDIT ART" : "ADD NEW ART"}
+          {isEdit === 'edit' ? 'EDIT ART' : 'ADD NEW ART'}
         </p>
       </div>
       <div>
@@ -116,7 +115,7 @@ const AddArt = ({
               className="form-control"
               onChange={(event) => {
                 uploadArtImageFun({ event, uid });
-                if (isEdit === "edit") {
+                if (isEdit === 'edit') {
                   deleteArtImageFun({ uid, downloadName });
                 }
               }}
@@ -196,7 +195,7 @@ const AddArt = ({
           <label htmlFor="tagSelect" className="form-label">
             ADD TAG
           </label>
-          {/* TODO:          Modify this Part of UI */}
+          {/* TODO:     Modify this Part of UI */}
           <div className="row">
             <div className="col-8">
               <input
@@ -216,7 +215,7 @@ const AddArt = ({
                     type: ADD_ART_TAG,
                     payload: tagInput,
                   });
-                  setTagInput("");
+                  setTagInput('');
                 }}
               >
                 Add Tag

@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import "./DisplayArt.css";
-import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { SET_STATE_TO_UPDATE_ART } from "../action/action.type";
+import React, { useState } from 'react';
+import './DisplayArt.css';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { SET_STATE_TO_UPDATE_ART } from '../action/action.type';
 import {
   deleteArtFun,
   toggleArtArchiveFun,
   deleteArtImageFun,
-} from "../action/art";
+} from '../action/art';
 
 const DisplayArt = ({
   art,
   index,
   uid,
+  totalArt,
   deleteArtFun,
   toggleArtArchiveFun,
   deleteArtImageFun,
@@ -20,15 +21,20 @@ const DisplayArt = ({
   const dispatch = useDispatch();
   const history = useHistory();
   const [showConfirmDeleteInput, setShowConfirmDeleteInput] = useState(false);
-  const [inputForConfirmDelete, setInputForConfirmDelete] = useState("");
+  const [inputForConfirmDelete, setInputForConfirmDelete] = useState('');
   const handleDelete = () => {
-    if (inputForConfirmDelete === "delete") {
-      deleteArtFun({ uid, artId: art.artId, archiveValue: !art.isArchive });
-      setInputForConfirmDelete("");
+    if (inputForConfirmDelete === 'delete') {
+      deleteArtFun({
+        uid,
+        artId: art.artId,
+        archiveValue: !art.isArchive,
+        totalArt,
+      });
+      setInputForConfirmDelete('');
       setShowConfirmDeleteInput(false);
       deleteArtImageFun({ uid, downloadName: art.downloadName });
     } else {
-      setInputForConfirmDelete("");
+      setInputForConfirmDelete('');
     }
   };
 
@@ -191,7 +197,7 @@ const DisplayArt = ({
             <p>
               <span>Tags : </span>
               {art.tag.map((tag, index) => (
-                <p style={{ display: "inline" }} key={index}>
+                <p style={{ display: 'inline' }} key={index}>
                   {tag}
                 </p>
               ))}
@@ -207,7 +213,7 @@ const DisplayArt = ({
                     type: SET_STATE_TO_UPDATE_ART,
                     payload: { ...art },
                   });
-                  history.push("art/edit");
+                  history.push('art/edit');
                 }}
               >
                 Edit
@@ -261,6 +267,7 @@ const DisplayArt = ({
 };
 
 const mapStateToProps = (state) => ({
+  totalArt: state.auth.artistProfile.totalArt,
   uid: state.auth.uid,
 });
 const mapDispatchToProps = {

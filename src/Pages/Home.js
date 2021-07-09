@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import "./Home.css";
-import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { CLEAR_ART_LIST, SET_LAST_ART } from "../action/action.type";
+import './Home.css';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { CLEAR_ART_LIST, SET_LAST_ART } from '../action/action.type';
 
-import { getArtListFun } from "../action/art";
-import ArtCategorySelector from "../Components/ArtCategorySelector";
-import DisplayArt from "../Components/DisplayArt";
+import { getArtListFun } from '../action/art';
+import ArtCategorySelector from '../Components/ArtCategorySelector';
+import DisplayArt from '../Components/DisplayArt';
 
-const Home = ({ artList, uid, lastArt, getArtListFun }) => {
-  const [category, setCategory] = useState("All");
-  const [search, setSearch] = useState("");
-  const [selector, setSelector] = useState({ search: "", category: "All" });
+const Home = ({ artList, uid, lastArt, totalArt, getArtListFun }) => {
+  const [category, setCategory] = useState('All');
+  const [search, setSearch] = useState('');
+  const [selector, setSelector] = useState({ search: '', category: 'All' });
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -48,7 +48,9 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
         <div className="m-3 p-2 border  row">
           <div className="artTitle">
             <p className="artTitle-big">My Arts</p>
-            <p className="artTitle-small">Total : {artList.length}</p>
+            <p className="artTitle-small">
+              Total : {artList.length} / {totalArt}
+            </p>
           </div>
         </div>
         <div className="m-3 p-2 border  row">
@@ -81,7 +83,7 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
           <div
             className="col-lg-4 "
             style={{
-              position: "relative",
+              position: 'relative',
             }}
           >
             <div
@@ -104,9 +106,9 @@ const Home = ({ artList, uid, lastArt, getArtListFun }) => {
               <button
                 className="btn btn-primary m-1"
                 onClick={() => {
-                  setCategory("All");
-                  setSearch("");
-                  setSelector({ search: "", category: "All" });
+                  setCategory('All');
+                  setSearch('');
+                  setSelector({ search: '', category: 'All' });
                 }}
               >
                 View All
@@ -140,6 +142,7 @@ const mapStateToProps = (state) => ({
   artList: state.art.artList,
   lastArt: state.art.lastArt,
   uid: state.auth.uid,
+  totalArt: state.auth.artistProfile.totalArt,
 });
 
 const mapDispatchToProps = {
