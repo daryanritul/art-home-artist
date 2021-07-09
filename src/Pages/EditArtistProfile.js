@@ -1,7 +1,7 @@
-import React from "react";
-import "./ArtistProfile.css";
-import { connect, useDispatch } from "react-redux";
-import { updateArtistProfileFun, uploadProfileImageFun } from "../action/auth";
+import React from 'react';
+import './ArtistProfile.css';
+import { connect, useDispatch } from 'react-redux';
+import { updateArtistProfileFun, uploadProfileImageFun } from '../action/auth';
 
 import {
   ADD_ARTIST_SOCIAL,
@@ -13,8 +13,8 @@ import {
   SET_ARTIST_SOCIAL_ID,
   SET_ARTIST_SOCIAL_LINK,
   SET_ARTIST_SOCIAL_PROVIDER_NAME,
-} from "../action/action.type";
-import { useHistory } from "react-router-dom";
+} from '../action/action.type';
+import { useHistory } from 'react-router-dom';
 
 const EditArtistProfile = ({
   updateArtistProfile,
@@ -124,7 +124,6 @@ const EditArtistProfile = ({
             <thead>
               <tr>
                 <th scope="col">Social Provider Name</th>
-                <th scope="col">social ID</th>
                 <th scope="col">social Link</th>
               </tr>
             </thead>
@@ -134,7 +133,6 @@ const EditArtistProfile = ({
                   return (
                     <tr key={index}>
                       <td>{social.socialProviderName}</td>
-                      <td>{social.socialID}</td>
                       <td>{social.socialLink}</td>
                       <td>
                         <button
@@ -160,11 +158,9 @@ const EditArtistProfile = ({
             <label htmlFor="socialProviderName" className="form-label">
               Social Provier Name
             </label>
-            <input
-              className="form-control"
-              type="text"
+            <select
               name="socialProviderName"
-              placeholder="Enter Social Provider Name"
+              className="form-control"
               value={updateArtistProfile.socialProviderName}
               onChange={(e) => {
                 dispatch({
@@ -172,26 +168,13 @@ const EditArtistProfile = ({
                   payload: e.target.value,
                 });
               }}
-            />
+            >
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Twitter">Twitter</option>
+            </select>
           </div>
-          <div className="col-lg-3">
-            <label htmlFor="socialID" className="form-label">
-              Social ID
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              name="socialID"
-              placeholder="Enter Social ID"
-              value={updateArtistProfile.socialID}
-              onChange={(e) => {
-                dispatch({
-                  type: SET_ARTIST_SOCIAL_ID,
-                  payload: e.target.value,
-                });
-              }}
-            />
-          </div>
+
           <div className="col-lg-3">
             <label htmlFor="socialLink" className="form-label">
               Social Link

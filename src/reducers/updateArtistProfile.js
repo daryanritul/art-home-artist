@@ -6,25 +6,22 @@ import {
   SET_ARTIST_NAME,
   SET_ARTIST_SOCIAL_LINK,
   SET_ARTIST_SOCIAL_PROVIDER_NAME,
-  SET_ARTIST_SOCIAL_ID,
   ADD_ARTIST_SOCIAL,
   CLEAR_UPDATE_ARTIST_PROFILE_STATE,
   SET_ARTIST_PROFILE_UPDATE_DATA,
   DELETE_ARTIST_SOCIAL,
   SET_ARTIST_PROFILE_PIC_UPLOAD_STATUS,
-} from "../action/action.type";
+} from '../action/action.type';
 
 const initialState = {
-  bio: "",
-  dateOfBirth: "",
-  dateStarted: "",
-  name: "",
-  profilePicUrl: "",
-  profilePicUploadStatus: "",
+  bio: '',
+  dateOfBirth: '',
+  dateStarted: '',
+  name: '',
+  profilePicUrl: '',
   social: [],
-  socialID: "",
-  socialLink: "",
-  socialProviderName: "",
+  socialLink: '',
+  socialProviderName: '',
 };
 
 export default (state = initialState, action) => {
@@ -33,16 +30,14 @@ export default (state = initialState, action) => {
       const newArr = state.social;
 
       newArr.push({
-        socialID: state.socialID,
         socialLink: state.socialLink,
         socialProviderName: state.socialProviderName,
       });
       return {
         ...state,
         social: newArr,
-        socialID: "",
-        socialLink: "",
-        socialProviderName: "",
+        socialLink: '',
+        socialProviderName: '',
       };
     case DELETE_ARTIST_SOCIAL:
       const deleteArr = state.social;
@@ -90,11 +85,6 @@ export default (state = initialState, action) => {
         profilePicUploadStatus: action.payload,
       };
 
-    case SET_ARTIST_SOCIAL_ID:
-      return {
-        ...state,
-        socialID: action.payload,
-      };
     case SET_ARTIST_SOCIAL_LINK:
       return {
         ...state,

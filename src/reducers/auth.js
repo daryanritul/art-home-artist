@@ -18,7 +18,6 @@ const initialState = {
     name: '',
     profilePicUrl: null,
     social: [],
-    socialID: '',
     socialLink: '',
     socialProviderName: '',
     totalArt: 0,

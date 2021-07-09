@@ -1,9 +1,9 @@
-import React from "react";
-import "./ArtistProfile.css";
-import { connect, useDispatch } from "react-redux";
-import defaultProfile from "../asset/defaultProfile.jpg";
-import { SET_ARTIST_PROFILE_UPDATE_DATA } from "../action/action.type";
-import { useHistory } from "react-router-dom";
+import React from 'react';
+import './ArtistProfile.css';
+import { connect, useDispatch } from 'react-redux';
+import defaultProfile from '../asset/defaultProfile.jpg';
+import { SET_ARTIST_PROFILE_UPDATE_DATA } from '../action/action.type';
+import { useHistory } from 'react-router-dom';
 
 const ArtistProfile = ({ profile }) => {
   const dispatch = useDispatch();
@@ -13,14 +13,14 @@ const ArtistProfile = ({ profile }) => {
     <div
       className="container border border-3 border-rounder-4 mt-2 p-3"
       style={{
-        position: "relative",
+        position: 'relative',
       }}
     >
       <button
         className="btn btn-success editBtn"
         onClick={() => {
           dispatch({ type: SET_ARTIST_PROFILE_UPDATE_DATA, payload: profile });
-          history.push("/editartistprofile");
+          history.push('/editartistprofile');
         }}
       >
         Edit Profile
@@ -63,7 +63,6 @@ const ArtistProfile = ({ profile }) => {
           <thead>
             <tr>
               <th scope="col">Social Account</th>
-              <th scope="col">Social Account Id</th>
               <th scope="col">social Link</th>
             </tr>
           </thead>
@@ -73,7 +72,6 @@ const ArtistProfile = ({ profile }) => {
                 return (
                   <tr key={index}>
                     <td>{social.socialProviderName}</td>
-                    <td>{social.socialID}</td>
                     <td>{social.socialLink}</td>
                   </tr>
                 );
