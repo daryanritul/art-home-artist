@@ -21,7 +21,7 @@ const Home = ({ artList, uid, lastArt, totalArt, getArtListFun }) => {
     await getArtListFun({
       uid,
       history,
-      search: selector.search,
+      search: selector.search.toLowerCase(),
       category: selector.category,
       lastArt,
     });
@@ -35,7 +35,7 @@ const Home = ({ artList, uid, lastArt, totalArt, getArtListFun }) => {
       getArtListFun({
         uid,
         history,
-        search: selector.search,
+        search: selector.search.toLowerCase(),
         category: selector.category,
         lastArt: [],
       });
