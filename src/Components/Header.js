@@ -1,51 +1,68 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { firebaseAuth } from "../firebase";
-import "./Header.css";
-import logo from "../asset/logo.svg";
-import { useDispatch } from "react-redux";
-import { ARTIST_LOGGED_OUT } from "../action/action.type";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { firebaseAuth } from '../firebase';
+import './Header.css';
+import logo from '../asset/logo.svg';
+import { useDispatch } from 'react-redux';
+import { ARTIST_LOGGED_OUT } from '../action/action.type';
 
 const Header = () => {
+  const [toggle, setToggle] = useState(false);
   const dispatch = useDispatch();
   const handleSignOut = () => {
     firebaseAuth
       .signOut()
       .then(() => {
-        toast("Sign Out", {
-          type: "success",
+        toast('Sign Out', {
+          type: 'success',
         });
         dispatch({ type: ARTIST_LOGGED_OUT });
       })
-      .catch((error) => {
-        console.log("Error", error);
+      .catch(error => {
+        console.log('Error', error);
         toast(error.message, {
-          type: "error",
+          type: 'error',
         });
       });
   };
 
   return (
-    <nav className="navbar">
-      <img src={logo} alt="not found" />
-      <div className="nav__items">
-        <Link className="nav-link" to="/">
-          <p>My Arts</p>
-        </Link>
+    <nav className={`nav ${toggle ? 'toggler' : ''}`}>
+      <Link className="nav__brand" href="#" to="/">
+        <img src={logo} alt="" />
+      </Link>
 
-        <Link className="nav-link" to="/archive">
-          <p>My Archives</p>
-        </Link>
-        <Link className="nav-link" to="/artistprofile">
-          <p>My Profile</p>
-        </Link>
-        <Link className="nav-link" to="/art/add">
-          <p>Add Art</p>
-        </Link>
-        <Link className="nav-link" to="/signIn" onClick={() => handleSignOut()}>
-          <p>Sign Out</p>
-        </Link>
+      <ul className="nav__list">
+        <li>
+          <Link className="nav-link" to="/">
+            My Arts
+          </Link>
+        </li>
+        <li>
+          <Link className="nav-link" to="/artistprofile">
+            My Profile
+          </Link>
+        </li>
+        <li>
+          <Link className="nav-link" to="/art/add">
+            Add Art
+          </Link>
+        </li>
+        <span>
+          <li>
+            <Link
+              className="nav-link"
+              to="/signIn"
+              onClick={() => handleSignOut()}
+            >
+              Sign Out
+            </Link>
+          </li>
+        </span>
+      </ul>
+      <div className="menu-btn" onClick={() => setToggle(!toggle)}>
+        <div className="menu-btn__burger"></div>
       </div>
     </nav>
   );

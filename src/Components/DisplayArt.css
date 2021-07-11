@@ -2,22 +2,30 @@
   display: flex;
   background: #fff;
   transition: background 300ms;
+  position: relative;
+  flex-wrap: wrap;
 }
 .art-card:hover {
   background: #f2f2ee;
 }
+.card-image {
+  flex-grow: 1;
+}
 .card-image img {
+  flex-grow: 1;
   width: 250px;
   height: 250px;
   object-fit: cover;
 }
 .card-index {
-  width: 8%;
+  position: absolute;
   flex-shrink: 0;
   text-align: center;
-  margin: auto;
   font-size: 20px;
   font-weight: bold;
+  color: #fff;
+  padding: 10px 15px;
+  background: #00000070;
 }
 .details-1 {
   display: flex;
@@ -25,6 +33,7 @@
 }
 .card-details {
   flex-grow: 1;
+  flex-basis: 60%;
   position: relative;
   margin: 15px;
 }
@@ -36,13 +45,13 @@
   font-weight: bold;
 }
 .card-buttons {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-grow: 1;
+  flex-direction: column;
 }
-.card-buttons button,
 .card-buttons a {
-  width: 23%;
+  margin: 5px;
 }
 .card-delete {
   flex-grow: 1;

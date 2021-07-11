@@ -96,7 +96,7 @@ const AddArt = ({
           name="artName"
           placeholder="Enter Art Name"
           value={artName}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_NAME,
               payload: e.target.value,
@@ -113,7 +113,7 @@ const AddArt = ({
               type="file"
               accept="image/*"
               className="form-control"
-              onChange={(event) => {
+              onChange={event => {
                 uploadArtImageFun({ event, uid });
                 if (isEdit === 'edit') {
                   deleteArtImageFun({ uid, downloadName });
@@ -136,7 +136,7 @@ const AddArt = ({
           name="descripation"
           placeholder="Enter descripation"
           value={description}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_DESCRIPATION,
               payload: e.target.value,
@@ -149,7 +149,7 @@ const AddArt = ({
         <ArtCategorySelector
           name="category"
           value={category}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ART_CATEGORY,
               payload: e.target.value,
@@ -158,11 +158,10 @@ const AddArt = ({
         />
 
         <div>
-          <h5>Artist tag list</h5>
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">Tga</th>
+                <th scope="col">Tags Lists</th>
               </tr>
             </thead>
             <tbody>
@@ -173,7 +172,7 @@ const AddArt = ({
                       <td>{tagName}</td>
                       <td>
                         <button
-                          className="btn btn-primary"
+                          className="btn btn-danger"
                           onClick={() =>
                             dispatch({
                               type: DELETE_ART_TAG,
@@ -191,25 +190,21 @@ const AddArt = ({
           </table>
         </div>
 
-        <div className="border border-2 m-3 p-2">
-          <label htmlFor="tagSelect" className="form-label">
-            ADD TAG
-          </label>
-          {/* TODO:     Modify this Part of UI */}
-          <div className="row">
+        <div>
+          <div className="row ">
             <div className="col-8">
               <input
                 className="form-control"
                 type="text"
                 name="tagSelect"
-                placeholder="Enter descripation"
+                placeholder="Enter tag title here ..."
                 value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
+                onChange={e => setTagInput(e.target.value)}
               />
             </div>
             <div className="col-4">
               <button
-                className="btn btn-success"
+                className="btn btn-success w-100"
                 onClick={() => {
                   dispatch({
                     type: ADD_ART_TAG,
@@ -218,7 +213,7 @@ const AddArt = ({
                   setTagInput('');
                 }}
               >
-                Add Tag
+                Add
               </button>
             </div>
           </div>
@@ -235,17 +230,17 @@ const AddArt = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   uid: state.auth.uid,
   artistProfile: state.auth.artistProfile,
   addArt: state.addArt,
 });
 
 const mapDispatchToProps = {
-  addArtFun: (data) => addArtFun(data),
-  updateArtFun: (data) => updateArtFun(data),
-  uploadArtImageFun: (data) => uploadArtImageFun(data),
-  deleteArtImageFun: (data) => deleteArtImageFun(data),
+  addArtFun: data => addArtFun(data),
+  updateArtFun: data => updateArtFun(data),
+  uploadArtImageFun: data => uploadArtImageFun(data),
+  deleteArtImageFun: data => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddArt);

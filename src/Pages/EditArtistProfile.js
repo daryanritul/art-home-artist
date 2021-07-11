@@ -39,7 +39,7 @@ const EditArtistProfile = ({
           name="name"
           placeholder="Enter Name"
           value={updateArtistProfile.name}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ARTIST_NAME,
               payload: e.target.value,
@@ -56,7 +56,7 @@ const EditArtistProfile = ({
               type="file"
               accept="image/*"
               className="form-control"
-              onChange={(event) => uploadProfileImageFun({ event, uid })}
+              onChange={event => uploadProfileImageFun({ event, uid })}
             />
             <p>{updateArtistProfile.profilePicUploadStatus}</p>
           </div>
@@ -78,7 +78,7 @@ const EditArtistProfile = ({
           name="dateOfBirth"
           placeholder="Enter Date of Birth"
           value={updateArtistProfile.dateOfBirth}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ARTIST_DATE_OF_BIRTH,
               payload: e.target.value,
@@ -94,7 +94,7 @@ const EditArtistProfile = ({
           name="dateStarted"
           placeholder="Enter Date Started"
           value={updateArtistProfile.dateStarted}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ARTIST_DATE_STARTED,
               payload: e.target.value,
@@ -110,7 +110,7 @@ const EditArtistProfile = ({
           name="bio"
           placeholder="Enter BIo"
           value={updateArtistProfile.bio}
-          onChange={(e) => {
+          onChange={e => {
             dispatch({
               type: SET_ARTIST_BIO,
               payload: e.target.value,
@@ -136,7 +136,7 @@ const EditArtistProfile = ({
                       <td>{social.socialLink}</td>
                       <td>
                         <button
-                          className="btn btn-primary"
+                          className="btn btn-danger"
                           onClick={() =>
                             dispatch({
                               type: DELETE_ARTIST_SOCIAL,
@@ -144,7 +144,7 @@ const EditArtistProfile = ({
                             })
                           }
                         >
-                          Remove
+                          X
                         </button>
                       </td>
                     </tr>
@@ -162,7 +162,7 @@ const EditArtistProfile = ({
               name="socialProviderName"
               className="form-control"
               value={updateArtistProfile.socialProviderName}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: SET_ARTIST_SOCIAL_PROVIDER_NAME,
                   payload: e.target.value,
@@ -185,7 +185,7 @@ const EditArtistProfile = ({
               name="socialLink"
               placeholder="Enter Social Link"
               value={updateArtistProfile.socialLink}
-              onChange={(e) => {
+              onChange={e => {
                 dispatch({
                   type: SET_ARTIST_SOCIAL_LINK,
                   payload: e.target.value,
@@ -214,14 +214,14 @@ const EditArtistProfile = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   uid: state.auth.uid,
   updateArtistProfile: state.updateArtistProfile,
 });
 
 const mapDispatchToProps = {
-  updateArtistProfileFun: (data) => updateArtistProfileFun(data),
-  uploadProfileImageFun: (data) => uploadProfileImageFun(data),
+  updateArtistProfileFun: data => updateArtistProfileFun(data),
+  uploadProfileImageFun: data => uploadProfileImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditArtistProfile);

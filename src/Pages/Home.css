@@ -41,9 +41,12 @@ $color-6: #191919; */
   justify-content: center;
 }
 .filter-buttons {
-  position: absolute;
+  position: relative;
   width: 100%;
-  bottom: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 .filter-buttons button {
   width: 45%;

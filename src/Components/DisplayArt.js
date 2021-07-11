@@ -150,24 +150,26 @@ const DisplayArt = ({
           <img src={art.imageUrl} alt="not found" />
         </div>
         {showConfirmDeleteInput ? (
-          <div className="card-delete">
-            <h5>Are you sure to delete Art</h5>
-            <h6>
-              To confirm delete type the letter
-              <strong className="text-warning"> delete </strong> in input box
-            </h6>
-            <input
-              className="form-control"
-              type="text"
-              name="confiumDelete"
-              placeholder="Enter delete"
-              value={inputForConfirmDelete}
-              onChange={(e) => setInputForConfirmDelete(e.target.value)}
-            />
-            <p>
-              After confirm delete your image data will be deleted from out
-              storage and cannot be restored!
-            </p>
+          <>
+            <div className="card-delete">
+              <h5>Are you sure to delete Art</h5>
+              <h6>
+                To confirm delete type the letter
+                <strong className="text-warning"> delete </strong> in input box
+              </h6>
+              <input
+                className="form-control"
+                type="text"
+                name="confiumDelete"
+                placeholder="Enter delete"
+                value={inputForConfirmDelete}
+                onChange={e => setInputForConfirmDelete(e.target.value)}
+              />
+              <p>
+                After confirm delete your image data will be deleted from out
+                storage and cannot be restored!
+              </p>
+            </div>
             <div className="card-buttons">
               <button
                 className="btn btn-warning m-2"
@@ -182,29 +184,31 @@ const DisplayArt = ({
                 Cancel
               </button>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="card-details">
-            <span className="details-1">
-              <p>
-                <span>Name : </span>
-                {art.artName}
-              </p>
-              <p>
-                <span>Catogory : </span> {art.category}
-              </p>
-            </span>
-            <p>
-              <span>Tags : </span>
-              {art.tag.map((tag, index) => (
-                <p style={{ display: 'inline' }} key={index}>
-                  {tag}
+          <>
+            <div className="card-details">
+              <span className="details-1">
+                <p>
+                  <span>Name : </span>
+                  {art.artName}
                 </p>
-              ))}
-            </p>
-            <p>
-              <span>Description : </span> {art.description}
-            </p>
+                <p>
+                  <span>Catogory : </span> {art.category}
+                </p>
+              </span>
+              <p>
+                <span>Tags : </span>
+                {art.tag.map((tag, index) => (
+                  <p style={{ display: 'inline' }} key={index}>
+                    {tag}
+                  </p>
+                ))}
+              </p>
+              <p>
+                <span>Description : </span> {art.description}
+              </p>
+            </div>
             <div className="card-buttons">
               <button
                 className="btn btn-success m-1"
@@ -259,21 +263,21 @@ const DisplayArt = ({
                 Delete
               </button>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   totalArt: state.auth.artistProfile.totalArt,
   uid: state.auth.uid,
 });
 const mapDispatchToProps = {
-  deleteArtFun: (data) => deleteArtFun(data),
-  toggleArtArchiveFun: (data) => toggleArtArchiveFun(data),
-  deleteArtImageFun: (data) => deleteArtImageFun(data),
+  deleteArtFun: data => deleteArtFun(data),
+  toggleArtArchiveFun: data => toggleArtArchiveFun(data),
+  deleteArtImageFun: data => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayArt);
