@@ -30,15 +30,17 @@ export const addArtFun =
     artistProfile,
   }) =>
   async (dispatch) => {
-    const arrayForSearch = [];
+    let arrayForSearch = [];
     const artNameWords = artName.split(' ');
     const nameWords = artistProfile.name.split(' ');
 
-    tag.forEach((t) => arrayForSearch.push(t.toLowerCase()));
-    artNameWords.forEach((t) => arrayForSearch.push(t.toLowerCase()));
+    artNameWords.forEach((t) => {
+      if (t) arrayForSearch.push(t.toLowerCase());
+    });
     nameWords.forEach((t) => arrayForSearch.push(t.toLowerCase()));
     arrayForSearch.push(artName.toLowerCase());
     arrayForSearch.push(artistProfile.name.toLowerCase());
+    arrayForSearch = arrayForSearch.concat(tag);
 
     firestore
       .collection('art')
@@ -100,15 +102,15 @@ export const updateArtFun =
   async (dispatch) => {
     try {
       if (artId) {
-        const arrayForSearch = [];
+        let arrayForSearch = [];
         const artNameWords = artName.split(' ');
         const nameWords = artistProfile.name.split(' ');
 
-        tag.forEach((t) => arrayForSearch.push(t.toLowerCase()));
         artNameWords.forEach((t) => arrayForSearch.push(t.toLowerCase()));
         nameWords.forEach((t) => arrayForSearch.push(t.toLowerCase()));
         arrayForSearch.push(artName.toLowerCase());
         arrayForSearch.push(artistProfile.name.toLowerCase());
+        arrayForSearch = arrayForSearch.concat(tag);
 
         await firestore
           .collection('art')

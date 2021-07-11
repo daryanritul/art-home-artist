@@ -1,20 +1,20 @@
-import React from "react";
+import React from 'react';
 
 const ArtCategorySelector = ({ value = null, onChange, name }) => {
   const category = [
-    "All",
-    "Painting",
-    "Mandala",
-    "Craft",
-    "Pop Art",
-    "Abstract Art",
-    "Illustration",
-    "Aborignal Art",
-    "Oil Painting",
-    "Sculpture Art",
-    "Sketching",
-    "Polaroids",
-    "Cartoon Art",
+    'All',
+    'Painting',
+    'Mandala',
+    'Craft',
+    'Pop Art',
+    'Abstract Art',
+    'Illustration',
+    'Aborignal Art',
+    'Oil Painting',
+    'Sculpture Art',
+    'Sketching',
+    'Polaroids',
+    'Cartoon Art',
   ];
   return (
     <select

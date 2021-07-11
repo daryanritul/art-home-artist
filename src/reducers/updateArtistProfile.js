@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import {
   SET_ARTIST_DATE_OF_BIRTH,
   SET_ARTIST_DATE_STARTED,
@@ -21,24 +22,36 @@ const initialState = {
   profilePicUrl: '',
   social: [],
   socialLink: '',
-  socialProviderName: '',
+  socialProviderName: 'Facebook',
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case ADD_ARTIST_SOCIAL:
       const newArr = state.social;
-
-      newArr.push({
-        socialLink: state.socialLink,
-        socialProviderName: state.socialProviderName,
+      let socialProviderNamePresent = false;
+      newArr.forEach((social) => {
+        if (social.socialProviderName === state.socialProviderName) {
+          toast("You Can't add Same Social Media twice", { type: 'warning' });
+          socialProviderNamePresent = true;
+        }
       });
-      return {
-        ...state,
-        social: newArr,
-        socialLink: '',
-        socialProviderName: '',
-      };
+
+      if (socialProviderNamePresent || !state.socialLink) {
+        return state;
+      } else {
+        newArr.push({
+          socialLink: state.socialLink,
+          socialProviderName: state.socialProviderName,
+        });
+        return {
+          ...state,
+          social: newArr,
+          socialLink: '',
+          socialProviderName: 'Facebook',
+        };
+      }
+
     case DELETE_ARTIST_SOCIAL:
       const deleteArr = state.social;
       deleteArr.splice(action.payload, 1);

@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import {
   ADD_ART_TAG,
   DELETE_ART_TAG,
@@ -11,38 +12,51 @@ import {
   SET_ART_ID,
   SET_ART_DOWNLOAD_UPLOAD_STATUS,
   SET_ART_DOWNLOAD_NAME,
-} from "../action/action.type";
+} from '../action/action.type';
 
 const initialState = {
-  category: "",
-  downloadUrl: "",
-  downloadName: "",
-  downloadUploadStatus: "",
-  description: "",
-  artName: "",
-  imageUrl: "",
+  category: '',
+  downloadUrl: '',
+  downloadName: '',
+  downloadUploadStatus: '',
+  description: '',
+  artName: '',
+  imageUrl: '',
   tag: [],
-  artId: "",
+  artId: '',
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case ADD_ART_TAG:
       const newArr = state.tag;
-      newArr.push(action.payload);
-      return {
-        ...state,
-        tag: newArr,
-      };
+      if (newArr.includes(action.payload.toLowerCase())) {
+        toast("You Can't add same tag again and again", {
+          type: 'warning',
+        });
+        return state;
+      } else if (action.payload === '' || action.payload.includes(' ')) {
+        toast("You can't Add Space in tag", {
+          type: 'warning',
+        });
+        return state;
+      } else {
+        newArr.push(action.payload.toLowerCase());
+        return {
+          ...state,
+          tag: newArr,
+        };
+      }
+
     case CLEAR_ADD_ART_STATE:
       return {
         ...state,
-        category: "",
-        downloadUrl: "",
-        description: "",
-        artName: "",
-        imageUrl: "",
-        artId: "",
+        category: '',
+        downloadUrl: '',
+        description: '',
+        artName: '',
+        imageUrl: '',
+        artId: '',
         tag: [],
       };
     case DELETE_ART_TAG:
