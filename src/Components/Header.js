@@ -19,7 +19,7 @@ const Header = () => {
         });
         dispatch({ type: ARTIST_LOGGED_OUT });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error', error);
         toast(error.message, {
           type: 'error',
@@ -37,6 +37,11 @@ const Header = () => {
         <li>
           <Link className="nav-link" to="/">
             My Arts
+          </Link>
+        </li>
+        <li>
+          <Link className="nav-link" to="/archive">
+            Archive
           </Link>
         </li>
         <li>

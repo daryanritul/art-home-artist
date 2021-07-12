@@ -124,9 +124,6 @@ export const updateArtFun =
             arrayForSearch,
             tag,
             timeStamp: firebase.firestore.Timestamp.now(),
-            artistname: artistProfile.name,
-            artistprofilePicUrl: artistProfile.profilePicUrl,
-            artistdateStarted: artistProfile.dateStarted,
           })
           .then(() => {
             toast('Art Added', {

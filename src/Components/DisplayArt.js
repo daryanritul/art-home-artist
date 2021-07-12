@@ -40,110 +40,6 @@ const DisplayArt = ({
 
   return (
     <div className="card border border-1 m-3 p-0">
-      {/* <div className="row ">
-        <div className="col-sm-6">
-          <img src={art.imageUrl} className="w-75" />
-        </div>
-
-        <div className="col-sm-6">
-          <h5>Art Name:</h5>
-          <p>{art.artName}</p>
-          <h5>Art Category:</h5>
-          <p>{art.category}</p>
-          <h5>Art Description:</h5>
-          <p>{art.description}</p>
-          <h5>Art Tag</h5>
-          {art.tag.map((tag, index) => (
-            <p key={index}>{tag}</p>
-          ))}
-
-          {showConfirmDeleteInput ? (
-            <div>
-              <h4>Aru you sure to delete Art</h4>
-              <h5>
-                If You want to delete type
-                <strong className="text-warning">delete</strong> in inpute box
-              </h5>
-              <input
-                className="form-control"
-                type="text"
-                name="confiumDelete"
-                placeholder="Enter delete"
-                value={inputForConfirmDelete}
-                onChange={e => setInputForConfirmDelete(e.target.value)}
-              />
-              <button
-                className="btn btn-warning m-2"
-                onClick={() => handleDelete()}
-              >
-                Confium
-              </button>
-              <button
-                className="btn btn-success m-2"
-                onClick={() => setShowConfirmDeleteInput(false)}
-              >
-                Don't Delete
-              </button>
-            </div>
-          ) : (
-            <div>
-              <button
-                className="btn btn-success m-1"
-                onClick={() => {
-                  dispatch({
-                    type: SET_STATE_TO_UPDATE_ART,
-                    payload: { ...art },
-                  });
-                  history.push('art/edit');
-                }}
-              >
-                Edit
-              </button>
-              <a
-                href={art.downloadUrl}
-                target="_blank"
-                type="button"
-                className="btn btn-primary"
-              >
-                Download
-              </a>
-
-              {art.isArchive ? (
-                <button
-                  className="btn btn-primary m-1"
-                  onClick={() =>
-                    toggleArtArchiveFun({
-                      artId: art.artId,
-                      archiveValue: false,
-                    })
-                  }
-                >
-                  Move to Public
-                </button>
-              ) : (
-                <button
-                  className="btn btn-primary m-1"
-                  onClick={() =>
-                    toggleArtArchiveFun({
-                      artId: art.artId,
-                      archiveValue: true,
-                    })
-                  }
-                >
-                  Move to Archive
-                </button>
-              )}
-
-              <button
-                className="btn btn-warning m-1"
-                onClick={() => setShowConfirmDeleteInput(true)}
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
-      </div> */}
       <div className="art-card">
         <div className="card-index">{index + 1}</div>
         <div className="card-image">
@@ -163,7 +59,7 @@ const DisplayArt = ({
                 name="confiumDelete"
                 placeholder="Enter delete"
                 value={inputForConfirmDelete}
-                onChange={e => setInputForConfirmDelete(e.target.value)}
+                onChange={(e) => setInputForConfirmDelete(e.target.value)}
               />
               <p>
                 After confirm delete your image data will be deleted from out
@@ -270,14 +166,14 @@ const DisplayArt = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   totalArt: state.auth.artistProfile.totalArt,
   uid: state.auth.uid,
 });
 const mapDispatchToProps = {
-  deleteArtFun: data => deleteArtFun(data),
-  toggleArtArchiveFun: data => toggleArtArchiveFun(data),
-  deleteArtImageFun: data => deleteArtImageFun(data),
+  deleteArtFun: (data) => deleteArtFun(data),
+  toggleArtArchiveFun: (data) => toggleArtArchiveFun(data),
+  deleteArtImageFun: (data) => deleteArtImageFun(data),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayArt);

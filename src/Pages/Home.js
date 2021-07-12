@@ -61,7 +61,7 @@ const Home = ({ artList, uid, lastArt, totalArt, getArtListFun }) => {
             <input
               className="form-control"
               type="text"
-              name="confiumDelete"
+              name="search"
               placeholder="Enter Name, Tags Here"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
