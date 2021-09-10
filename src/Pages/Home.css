@@ -1,0 +1,59 @@
+/* $color-1: #f2f2ee;
+$color-2: #949792;
+$color-3: #bfb195;
+$color-4: #86715c;
+$color-5: #3c363a;
+$color-6: #191919; */
+
+/* Heading */
+
+.artTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #bfb195;
+}
+.artTitle-big {
+  color: #3c363a;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 10px;
+}
+.artTitle-small {
+  color: #3c363a;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 10px;
+}
+.viewMore {
+  width: 200px;
+  margin: 20px;
+  padding: 10px;
+  font-weight: bold;
+}
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.filter-buttons {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.filter-buttons button {
+  width: 45%;
+  margin: 0 10px;
+}
+.addArtBtn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
