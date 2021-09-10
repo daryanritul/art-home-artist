@@ -325,6 +325,7 @@ export const getArtListFun =
       toast(error.message, {
         type: 'error',
       });
+      console.log('Error', error);
     }
   };
 
